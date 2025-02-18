@@ -8,7 +8,8 @@ Progres belajar dicoding laskar AI
 - apa itu git hub
 - membuat repository baru
 
-### 17 February 2025 target 
+### 18 February 2025 target 
 **100%** selesai mempelajari git hub
+**100%** dasar logika (101)
 - lulus materi pertama git hub
 - Beneran lulus lho
