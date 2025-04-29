@@ -77,11 +77,16 @@ Berikut adalah penjelasan dari setiap fitur atau kolom dalam dataset:
 
 Untuk memahami pola dan struktur data, dilakukan beberapa tahap analisis eksploratif, antara lain:
 
-- **Time Series Plot**: Untuk melihat tren harga emas dari waktu ke waktu, termasuk identifikasi adanya seasonality dan tren jangka panjang.
-- **Moving Average Plot**: Untuk menghaluskan fluktuasi harga dan menyoroti arah tren umum (misalnya MA 7-hari atau 30-hari).
-- **Heatmap Korelasi**: Untuk mengevaluasi korelasi antar fitur seperti Open, High, Low, dan Close.
-- **Distribusi Harga Harian dan Perubahannya**: Untuk melihat sebaran harga dan volatilitas harian yang mungkin memengaruhi model prediksi.
-- **Candlestick Chart**: Untuk menampilkan dinamika harga harian secara detail, termasuk Open, High, Low, dan Close.
+- **Time Series Plot**![Screenshot 2025-04-29 155147](https://github.com/user-attachments/assets/b2bcf45f-03e8-4412-82fe-dd9f1f2fc7b6)
+: Untuk melihat tren harga emas dari waktu ke waktu, termasuk identifikasi adanya seasonality dan tren jangka panjang.
+- **Moving Average Plot**:![Screenshot 2025-04-29 155202](https://github.com/user-attachments/assets/fa040df6-eca9-445d-ad3a-2cc4af08bbd5)
+ Untuk menghaluskan fluktuasi harga dan menyoroti arah tren umum (misalnya MA 7-hari atau 30-hari).
+- **Heatmap Korelasi**:![Screenshot 2025-04-29 155212](https://github.com/user-attachments/assets/509b10df-fd90-43fc-826e-c0b853280b1d)
+ Untuk mengevaluasi korelasi antar fitur seperti Open, High, Low, dan Close.
+- **Distribusi Harga Harian dan Perubahannya**![Screenshot 2025-04-29 155219](https://github.com/user-attachments/assets/62db5974-b3c5-4b33-8af3-f2a2f65e38b9)
+: Untuk melihat sebaran harga dan volatilitas harian yang mungkin memengaruhi model prediksi.
+- **Candlestick Chart**: ![Screenshot 2025-04-29 155228](https://github.com/user-attachments/assets/635bf0aa-f58c-4e39-8f2e-76fc5a6a93d7)
+Untuk menampilkan dinamika harga harian secara detail, termasuk Open, High, Low, dan Close.
 
 Visualisasi tersebut membantu dalam mengidentifikasi pola-pola penting yang bisa dimanfaatkan oleh model prediktif, serta memastikan tidak ada outlier ekstrem atau missing value yang dapat mengganggu proses modeling.
 
@@ -269,7 +274,10 @@ Dalam proyek ini, karena permasalahan yang diangkat adalah regresi (prediksi har
     
     MAE mengukur rata-rata selisih absolut antara nilai aktual dan nilai prediksi.
     
-    MAE=1n∑i=1n∣yi−y^i∣\text{MAE} = \frac{1}{n} \sum_{i=1}^{n} | y_i - \hat{y}_i |
+    $$
+    \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} \left| y_i - \hat{y}_i \right|
+    $$
+
     
     Metrik ini mudah diinterpretasikan karena memiliki satuan yang sama dengan target (dalam hal ini USD). Nilai yang lebih rendah menunjukkan performa model yang lebih baik.
     
@@ -277,7 +285,10 @@ Dalam proyek ini, karena permasalahan yang diangkat adalah regresi (prediksi har
     
     RMSE mengukur akar kuadrat dari rata-rata kesalahan kuadrat antara nilai prediksi dan aktual.
     
-    RMSE=1n∑i=1n(yi−y^i)2\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+    $$
+    \text{RMSE} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 }
+    $$
+
     
     RMSE memberi penalti lebih besar terhadap kesalahan besar. Nilai lebih rendah menunjukkan prediksi yang lebih akurat dan stabil.
     
@@ -285,7 +296,10 @@ Dalam proyek ini, karena permasalahan yang diangkat adalah regresi (prediksi har
     
     R² mengukur seberapa besar variasi dari data target yang bisa dijelaskan oleh model.
     
-    R2=1−∑(yi−y^i)2∑(yi−yˉ)2R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}
+    $$
+    R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
+    $$
+
     
     Nilai R² berada di antara 0 hingga 1. Nilai mendekati 1 menunjukkan bahwa model mampu menjelaskan sebagian besar variasi pada data.
     
@@ -385,5 +399,7 @@ Meskipun LSTM adalah arsitektur populer untuk data time series, model ini memili
 
 ### Visualisasi
 
-- **Plot Prediksi vs Aktual**: Digunakan untuk memverifikasi bagaimana model mengikuti tren harga emas harian.
-- **Plot Loss Function**: Dilakukan monitoring pada training dan validation loss untuk setiap model guna mendeteksi overfitting. Semua model menggunakan **EarlyStopping** untuk menghentikan pelatihan saat performa validasi tidak meningkat lagi dalam 5 epoch berturut-turut.
+- **Plot Prediksi vs Aktual**: ![Screenshot 2025-04-29 155415](https://github.com/user-attachments/assets/b6cb68f4-4232-4bc8-b5ad-395296e934ee)
+Digunakan untuk memverifikasi bagaimana model mengikuti tren harga emas harian.
+- **Plot Loss Function**:![Screenshot 2025-04-29 155421](https://github.com/user-attachments/assets/69f84183-52ec-4e16-bc80-58a428da819b)
+ Dilakukan monitoring pada training dan validation loss untuk setiap model guna mendeteksi overfitting. Semua model menggunakan **EarlyStopping** untuk menghentikan pelatihan saat performa validasi tidak meningkat lagi dalam 5 epoch berturut-turut.
