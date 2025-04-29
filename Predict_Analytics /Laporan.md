@@ -77,16 +77,30 @@ Berikut adalah penjelasan dari setiap fitur atau kolom dalam dataset:
 
 Untuk memahami pola dan struktur data, dilakukan beberapa tahap analisis eksploratif, antara lain:
 
-- **Time Series Plot**![Screenshot 2025-04-29 155147](https://github.com/user-attachments/assets/b2bcf45f-03e8-4412-82fe-dd9f1f2fc7b6)
-: Untuk melihat tren harga emas dari waktu ke waktu, termasuk identifikasi adanya seasonality dan tren jangka panjang.
-- **Moving Average Plot**:![Screenshot 2025-04-29 155202](https://github.com/user-attachments/assets/fa040df6-eca9-445d-ad3a-2cc4af08bbd5)
- Untuk menghaluskan fluktuasi harga dan menyoroti arah tren umum (misalnya MA 7-hari atau 30-hari).
-- **Heatmap Korelasi**:![Screenshot 2025-04-29 155212](https://github.com/user-attachments/assets/509b10df-fd90-43fc-826e-c0b853280b1d)
- Untuk mengevaluasi korelasi antar fitur seperti Open, High, Low, dan Close.
-- **Distribusi Harga Harian dan Perubahannya**![Screenshot 2025-04-29 155219](https://github.com/user-attachments/assets/62db5974-b3c5-4b33-8af3-f2a2f65e38b9)
-: Untuk melihat sebaran harga dan volatilitas harian yang mungkin memengaruhi model prediksi.
-- **Candlestick Chart**: ![Screenshot 2025-04-29 155228](https://github.com/user-attachments/assets/635bf0aa-f58c-4e39-8f2e-76fc5a6a93d7)
-Untuk menampilkan dinamika harga harian secara detail, termasuk Open, High, Low, dan Close.
+- **Time Series Plot**: Untuk melihat tren harga emas dari waktu ke waktu, termasuk identifikasi adanya seasonality dan tren jangka panjang. 
+  ![Screenshot 2025-04-29 155147](https://github.com/user-attachments/assets/b2bcf45f-03e8-4412-82fe-dd9f1f2fc7b6)
+  
+Berdasarkan hasil eksplorasi data harga emas XAU/USD dari tahun 2004 hingga 2024, ditemukan adanya tren naik jangka panjang yang cukup signifikan pada harga penutupan emas. Kenaikan harga ini juga disertai beberapa periode koreksi dan konsolidasi yang menandakan adanya pola musiman atau siklus ekonomi tertentu. Hal ini menunjukkan bahwa pergerakan harga emas bersifat non-stasioner dan sangat dipengaruhi oleh waktu, sehingga mendukung penggunaan pendekatan sequence learning seperti LSTM atau GRU dalam pemodelan.
+- **Moving Average Plot**: Untuk menghaluskan fluktuasi harga dan menyoroti arah tren umum (misalnya MA 7-hari atau 30-hari).
+  ![Screenshot 2025-04-29 155202](https://github.com/user-attachments/assets/fa040df6-eca9-445d-ad3a-2cc4af08bbd5)
+
+  Selanjutnya, visualisasi Moving Average (MA) 50 dan MA 200 hari memperlihatkan dinamika tren jangka menengah dan panjang. Ketika harga penutupan melampaui MA 200 dari bawah (golden cross), umumnya diikuti oleh tren kenaikan yang cukup kuat. Pola ini menunjukkan bahwa data historis dari harga penutupan sudah cukup kaya akan informasi tren, sehingga dapat digunakan sebagai fitur utama dalam proses prediksi. Penggunaan teknik time window atau sliding window pada data Close berpotensi menangkap pola ini secara efektif dalam model.
+
+- **Heatmap Korelasi**: Untuk mengevaluasi korelasi antar fitur seperti Open, High, Low, dan Close.
+   ![Screenshot 2025-04-29 155212](https://github.com/user-attachments/assets/509b10df-fd90-43fc-826e-c0b853280b1d)
+  
+Analisis korelasi antar fitur menunjukkan bahwa Open, High, Low, dan Close memiliki korelasi sangat tinggi satu sama lain (mendekati 1), sedangkan Volume menunjukkan korelasi yang relatif lebih rendah, sekitar 0,6. Temuan ini mengindikasikan bahwa sebagian besar fitur harga membawa informasi yang serupa (redundan), sehingga penggunaan keempat fitur sekaligus (OHLC) mungkin tidak memberikan peningkatan signifikan pada performa model. Oleh karena itu, dilakukan dua pendekatan dalam pemodelan: pertama, menggunakan empat fitur (Open, High, Low, dan Close), dan kedua, menggunakan satu fitur saja (Close) sebagai baseline untuk menguji efektivitasnya.
+- **Distribusi Harga Harian dan Perubahannya**: Untuk melihat sebaran harga dan volatilitas harian yang mungkin memengaruhi model prediksi.
+   ![Screenshot 2025-04-29 155219](https://github.com/user-attachments/assets/62db5974-b3c5-4b33-8af3-f2a2f65e38b9)
+
+Distribusi perubahan harga harian (daily return) menunjukkan bentuk yang menyerupai distribusi normal, namun dengan kurtosis yang tinggi (heavy-tailed). Hal ini menunjukkan bahwa pergerakan harga emas dalam satu hari sebagian besar kecil, tetapi ada kemungkinan terjadinya lonjakan besar yang mencerminkan volatilitas pasar. Oleh karena itu, pemodelan perlu mempertimbangkan karakteristik volatilitas ini dan memilih model yang cukup robust terhadap outlier, seperti LSTM atau GRU.
+
+- **Candlestick Chart**: Untuk menampilkan dinamika harga harian secara detail, termasuk Open, High, Low, dan Close.
+  ![Screenshot 2025-04-29 155228](https://github.com/user-attachments/assets/635bf0aa-f58c-4e39-8f2e-76fc5a6a93d7)
+  
+Terakhir, visualisasi candlestick chart membantu memperjelas dinamika harga intraday melalui representasi Open, High, Low, dan Close. Pola-pola candlestick tertentu seperti bullish atau bearish engulfing dapat memberikan sinyal teknikal yang bermanfaat dalam analisis harga. Namun, karena fitur OHLC memiliki korelasi yang sangat tinggi, penambahan seluruh fitur tersebut ke dalam model tidak selalu meningkatkan performa secara signifikan. Justru, model dengan satu fitur Close saja dapat memberikan hasil prediksi yang kompetitif dengan efisiensi lebih tinggi.
+
+Secara keseluruhan, hasil EDA ini menjadi dasar dalam pengambilan keputusan pemodelan, yaitu dengan membandingkan dua pendekatan: penggunaan beberapa fitur (OHLC) versus penggunaan satu fitur utama (Close). Perbandingan ini diharapkan dapat menjawab sejauh mana kompleksitas fitur memengaruhi performa model prediksi harga emas.
 
 Visualisasi tersebut membantu dalam mengidentifikasi pola-pola penting yang bisa dimanfaatkan oleh model prediktif, serta memastikan tidak ada outlier ekstrem atau missing value yang dapat mengganggu proses modeling.
 
@@ -243,6 +257,7 @@ history = model.fit(
 
 Eksperimen ini menunjukkan bahwa penggunaan 4 fitur pada GRU meningkatkan informasi yang tersedia untuk model, namun waktu pelatihan menjadi sedikit lebih lama dibanding GRU 1 fitur. Hasil prediksi tetap akurat dan mendekati hasil dari model LSTM.
 
+
 ### Model Terbaik: **GRU dengan 1 Fitur (Close)**
 
 Berdasarkan hasil evaluasi menggunakan metrik **MAE**, **RMSE**, dan **R²**, model **GRU dengan satu fitur `Close`** dipilih sebagai model terbaik. Meskipun hanya menggunakan satu fitur, model ini menunjukkan **hasil prediksi yang lebih akurat dan konsisten** dibandingkan model lainnya, dengan waktu pelatihan yang lebih efisien.
@@ -253,15 +268,15 @@ Berdasarkan hasil evaluasi menggunakan metrik **MAE**, **RMSE**, dan **R²**, mo
 - **Waktu pelatihan lebih singkat**, sehingga cocok untuk digunakan dalam sistem real-time atau update berkala.
 - Meskipun hanya menggunakan satu fitur, **akurasi prediksi tetap tinggi** dan cukup representatif untuk harga emas harian.
 - Sederhana namun efektif, sehingga **mudah di-deploy dan di-maintain** dalam sistem prediksi berbasis web atau IoT.
-
+  
 Model GRU 1 fitur ini menjadi solusi utama dalam proyek ini karena memberikan **kombinasi terbaik antara kecepatan, kesederhanaan, dan akurasi prediksi**. Cocok untuk digunakan oleh masyarakat atau investor pemula yang membutuhkan estimasi harga emas harian dengan cepat dan praktis.
+---
 
 Semua model dilengkapi dengan **EarlyStopping**, dengan parameter:
 
 ```python
 early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 ```
-
 Hal ini dilakukan untuk **mencegah overfitting** dan memastikan model berhenti pada epoch terbaik saat validasi loss tidak membaik lagi.
 
 ## Evaluation
@@ -273,19 +288,25 @@ Dalam proyek ini, karena permasalahan yang diangkat adalah regresi (prediksi har
 1. **MAE (Mean Absolute Error)**
     
     MAE mengukur rata-rata selisih absolut antara nilai aktual dan nilai prediksi
-    
+
+   ![Screenshot 2025-04-30 061017](https://github.com/user-attachments/assets/28f8ecb4-e138-4001-b42d-decf58efe0bd)
+
     Metrik ini mudah diinterpretasikan karena memiliki satuan yang sama dengan target (dalam hal ini USD). Nilai yang lebih rendah menunjukkan performa model yang lebih baik.
     
-2. **RMSE (Root Mean Squared Error)**
+3. **RMSE (Root Mean Squared Error)**
     
     RMSE mengukur akar kuadrat dari rata-rata kesalahan kuadrat antara nilai prediksi dan aktual.
+
+   ![Screenshot 2025-04-30 062529](https://github.com/user-attachments/assets/b22a27fc-8360-4840-81c6-2887cf0c53fe)
+
     RMSE memberi penalti lebih besar terhadap kesalahan besar. Nilai lebih rendah menunjukkan prediksi yang lebih akurat dan stabil.
     
-3. **R² Score (Coefficient of Determination)**
+5. **R² Score (Coefficient of Determination)**
     R² mengukur seberapa besar variasi dari data target yang bisa dijelaskan oleh model.
-    Nilai R² berada di antara 0 hingga 1. Nilai mendekati 1 menunjukkan bahwa model mampu menjelaskan sebagian besar variasi pada data.
-    
+   
+   ![Screenshot 2025-04-30 062533](https://github.com/user-attachments/assets/70485404-6523-46a0-b6dd-95542272d43f)
 
+    Nilai R² berada di antara 0 hingga 1. Nilai mendekati 1 menunjukkan bahwa model mampu menjelaskan sebagian besar variasi pada data.
 ---
 
 ### Hasil Evaluasi Model
@@ -316,66 +337,14 @@ Model ini memberikan hasil yang juga baik, namun sedikit di bawah performa model
 
 Meskipun LSTM adalah arsitektur populer untuk data time series, model ini memiliki performa paling rendah dalam eksperimen ini. Hal ini menunjukkan bahwa dalam kasus ini, GRU lebih cocok karena lebih ringan dan konvergen lebih cepat.
 
-## Evaluation
-
-### Metrik Evaluasi
-
-Dalam proyek ini, karena permasalahan yang diangkat adalah regresi (prediksi harga emas sebagai data numerik berkelanjutan), maka digunakan tiga metrik evaluasi utama:
-
-1. **MAE (Mean Absolute Error)**
-    
-    MAE mengukur rata-rata selisih absolut antara nilai aktual dan nilai prediksi.
-    
-    Metrik ini mudah diinterpretasikan karena memiliki satuan yang sama dengan target (dalam hal ini USD). Nilai yang lebih rendah menunjukkan performa model yang lebih baik.
-    
-2. **RMSE (Root Mean Squared Error)**
-    
-    RMSE mengukur akar kuadrat dari rata-rata kesalahan kuadrat antara nilai prediksi dan aktual.
-    
-    RMSE memberi penalti lebih besar terhadap kesalahan besar. Nilai lebih rendah menunjukkan prediksi yang lebih akurat dan stabil.
-    
-3. **R² Score (Coefficient of Determination)**
-    
-    R² mengukur seberapa besar variasi dari data target yang bisa dijelaskan oleh model.
-
-    Nilai R² berada di antara 0 hingga 1. Nilai mendekati 1 menunjukkan bahwa model mampu menjelaskan sebagian besar variasi pada data.
-    
-
----
-
-### Hasil Evaluasi Model
-
-Berikut adalah hasil evaluasi untuk masing-masing model:
-
-### 1. **Model GRU dengan 1 Fitur (`Close`)**
-
-- **MAE**: 19.08 USD
-- **RMSE**: 25.19 USD
-- **R² Score**: 0.9926
-
-Model ini memberikan hasil terbaik dengan MAE dan RMSE paling rendah serta R² tertinggi. Ini menunjukkan bahwa prediksi mendekati nilai aktual dan model sangat mampu menjelaskan variasi harga emas.
-
-### 2. **Model GRU dengan 4 Fitur (`Open`, `High`, `Low`, `Close`)**
-
-- **MAE**: 22.56 USD
-- **RMSE**: 29.85 USD
-- **R² Score**: 0.9896
-
-Model ini memberikan hasil yang juga baik, namun sedikit di bawah performa model GRU 1 fitur. Model ini bisa menjadi alternatif apabila dibutuhkan pemodelan yang mempertimbangkan lebih banyak fitur.
-
-### 3. **Model LSTM dengan 4 Fitur**
-
-- **MAE**: 35.27 USD
-- **RMSE**: 47.63 USD
-- **R² Score**: 0.9734
-
-Meskipun LSTM adalah arsitektur populer untuk data time series, model ini memiliki performa paling rendah dalam eksperimen ini. Hal ini menunjukkan bahwa dalam kasus ini, GRU lebih cocok karena lebih ringan dan konvergen lebih cepat.
-
----
 
 ### Visualisasi
 
-- **Plot Prediksi vs Aktual**: ![Screenshot 2025-04-29 155415](https://github.com/user-attachments/assets/b6cb68f4-4232-4bc8-b5ad-395296e934ee)
-Digunakan untuk memverifikasi bagaimana model mengikuti tren harga emas harian.
-- **Plot Loss Function**:![Screenshot 2025-04-29 155421](https://github.com/user-attachments/assets/69f84183-52ec-4e16-bc80-58a428da819b)
- Dilakukan monitoring pada training dan validation loss untuk setiap model guna mendeteksi overfitting. Semua model menggunakan **EarlyStopping** untuk menghentikan pelatihan saat performa validasi tidak meningkat lagi dalam 5 epoch berturut-turut.
+- **Plot Prediksi vs Aktual**:
+  ![Screenshot 2025-04-29 155415](https://github.com/user-attachments/assets/b6cb68f4-4232-4bc8-b5ad-395296e934ee)
+
+  Digunakan untuk memverifikasi bagaimana model mengikuti tren harga emas harian.
+- **Plot Loss Function**:
+  ![Screenshot 2025-04-29 155421](https://github.com/user-attachments/assets/69f84183-52ec-4e16-bc80-58a428da819b)
+
+  Dilakukan monitoring pada training dan validation loss untuk setiap model guna mendeteksi overfitting. Semua model menggunakan **EarlyStopping** untuk menghentikan pelatihan saat performa validasi tidak meningkat lagi dalam 5 epoch berturut-turut.
