@@ -270,37 +270,19 @@ Hal ini dilakukan untuk **mencegah overfitting** dan memastikan model berhenti p
 
 Dalam proyek ini, karena permasalahan yang diangkat adalah regresi (prediksi harga emas sebagai data numerik berkelanjutan), maka digunakan tiga metrik evaluasi utama:
 
-1. **MAE (Mean Absolute Error)**MAE=n1i=1∑n∣yi−y^i∣
+1. **MAE (Mean Absolute Error)**
     
-    MAE mengukur rata-rata selisih absolut antara nilai aktual dan nilai prediksi.
-    
-    $$
-    \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} \left| y_i - \hat{y}_i \right|
-    $$
-
+    MAE mengukur rata-rata selisih absolut antara nilai aktual dan nilai prediksi
     
     Metrik ini mudah diinterpretasikan karena memiliki satuan yang sama dengan target (dalam hal ini USD). Nilai yang lebih rendah menunjukkan performa model yang lebih baik.
     
-2. **RMSE (Root Mean Squared Error)**RMSE=n1i=1∑n(yi−y^i)2
+2. **RMSE (Root Mean Squared Error)**
     
     RMSE mengukur akar kuadrat dari rata-rata kesalahan kuadrat antara nilai prediksi dan aktual.
-    
-    $$
-    \text{RMSE} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 }
-    $$
-
-    
     RMSE memberi penalti lebih besar terhadap kesalahan besar. Nilai lebih rendah menunjukkan prediksi yang lebih akurat dan stabil.
     
-3. **R² Score (Coefficient of Determination)**R2=1−∑(yi−yˉ)2∑(yi−y^i)2
-    
+3. **R² Score (Coefficient of Determination)**
     R² mengukur seberapa besar variasi dari data target yang bisa dijelaskan oleh model.
-    
-    $$
-    R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
-    $$
-
-    
     Nilai R² berada di antara 0 hingga 1. Nilai mendekati 1 menunjukkan bahwa model mampu menjelaskan sebagian besar variasi pada data.
     
 
