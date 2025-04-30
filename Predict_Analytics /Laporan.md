@@ -63,8 +63,7 @@ Dataset yang digunakan dalam proyek ini adalah **Gold Price Historical Data**, y
 Dataset ini berisi informasi historis harga emas dalam USD per troy ounce dari tahun 2004 hingga awal 2024. Data dikumpulkan dari sumber-sumber pasar terpercaya dan telah digunakan secara luas dalam berbagai analisis ekonomi dan keuangan.
 
 ### Variabel dalam Dataset
-
-Berikut adalah penjelasan dari setiap fitur atau kolom dalam dataset:
+Dataset memiliki 5295 baris data dengan 6 fitur kolom, Berikut adalah penjelasan dari setiap fitur atau kolom dalam dataset:
 
 - **Date**: Tanggal pencatatan harga emas. Formatnya YYYY-MM-DD.
 - **Open**: Harga emas pada saat pasar dibuka (USD/oz).
@@ -73,6 +72,23 @@ Berikut adalah penjelasan dari setiap fitur atau kolom dalam dataset:
 - **Close**: Harga emas saat pasar ditutup (USD/oz). Kolom ini menjadi target utama dalam prediksi harga.
 - **Volume**: Volume transaksi perdagangan emas pada hari tersebut. Kolom ini bersifat opsional dan tidak selalu tersedia atau akurat.
 
+Dengan kodisi data sebagai berikut :
+1. Tidak ditemukannya missing value
+2. Tidak ditemukannya data duplikat
+3. Ditemukannya Outlier pada semua fitur dengan keterangan sebagai berikut :
+   
+    Kolom 'Open': 2 outlier
+   
+    Kolom 'High': 1 outlier
+   
+    Kolom 'Low': 2 outlier
+   
+    Kolom 'Close': 1 outlier
+   
+    Kolom 'Volume': 82 outlier
+   
+    yang dimana pada notebook ditampilkan dengan rinci setiap data outlier untuk menentukan langkah terbaik dalam menangani setiap outlier.
+   
 ### Exploratory Data Analysis (EDA) & Visualisasi
 
 Untuk memahami pola dan struktur data, dilakukan beberapa tahap analisis eksploratif, antara lain:
@@ -80,7 +96,7 @@ Untuk memahami pola dan struktur data, dilakukan beberapa tahap analisis eksplor
 - **Time Series Plot**: Untuk melihat tren harga emas dari waktu ke waktu, termasuk identifikasi adanya seasonality dan tren jangka panjang. 
   ![Screenshot 2025-04-29 155147](https://github.com/user-attachments/assets/b2bcf45f-03e8-4412-82fe-dd9f1f2fc7b6)
   
-Berdasarkan hasil eksplorasi data harga emas XAU/USD dari tahun 2004 hingga 2024, ditemukan adanya tren naik jangka panjang yang cukup signifikan pada harga penutupan emas. Kenaikan harga ini juga disertai beberapa periode koreksi dan konsolidasi yang menandakan adanya pola musiman atau siklus ekonomi tertentu. Hal ini menunjukkan bahwa pergerakan harga emas bersifat non-stasioner dan sangat dipengaruhi oleh waktu, sehingga mendukung penggunaan pendekatan sequence learning seperti LSTM atau GRU dalam pemodelan.
+    Berdasarkan hasil eksplorasi data harga emas XAU/USD dari tahun 2004 hingga 2024, ditemukan adanya tren naik jangka panjang yang cukup signifikan pada harga penutupan emas. Kenaikan harga ini juga disertai beberapa periode koreksi dan konsolidasi yang menandakan adanya pola musiman atau siklus ekonomi tertentu. Hal ini menunjukkan bahwa pergerakan harga emas bersifat non-stasioner dan sangat dipengaruhi oleh waktu, sehingga mendukung penggunaan pendekatan sequence learning seperti LSTM atau GRU dalam pemodelan.
 - **Moving Average Plot**: Untuk menghaluskan fluktuasi harga dan menyoroti arah tren umum (misalnya MA 7-hari atau 30-hari).
   ![Screenshot 2025-04-29 155202](https://github.com/user-attachments/assets/fa040df6-eca9-445d-ad3a-2cc4af08bbd5)
 
@@ -89,16 +105,16 @@ Berdasarkan hasil eksplorasi data harga emas XAU/USD dari tahun 2004 hingga 2024
 - **Heatmap Korelasi**: Untuk mengevaluasi korelasi antar fitur seperti Open, High, Low, dan Close.
    ![Screenshot 2025-04-29 155212](https://github.com/user-attachments/assets/509b10df-fd90-43fc-826e-c0b853280b1d)
   
-Analisis korelasi antar fitur menunjukkan bahwa Open, High, Low, dan Close memiliki korelasi sangat tinggi satu sama lain (mendekati 1), sedangkan Volume menunjukkan korelasi yang relatif lebih rendah, sekitar 0,6. Temuan ini mengindikasikan bahwa sebagian besar fitur harga membawa informasi yang serupa (redundan), sehingga penggunaan keempat fitur sekaligus (OHLC) mungkin tidak memberikan peningkatan signifikan pada performa model. Oleh karena itu, dilakukan dua pendekatan dalam pemodelan: pertama, menggunakan empat fitur (Open, High, Low, dan Close), dan kedua, menggunakan satu fitur saja (Close) sebagai baseline untuk menguji efektivitasnya.
+    Analisis korelasi antar fitur menunjukkan bahwa Open, High, Low, dan Close memiliki korelasi sangat tinggi satu sama lain (mendekati 1), sedangkan Volume menunjukkan korelasi yang relatif lebih rendah, sekitar 0,6. Temuan ini mengindikasikan bahwa sebagian besar fitur harga membawa informasi yang serupa (redundan), sehingga penggunaan keempat fitur sekaligus (OHLC) mungkin tidak memberikan peningkatan signifikan pada performa model. Oleh karena itu, dilakukan dua pendekatan dalam pemodelan: pertama, menggunakan empat fitur (Open, High, Low, dan Close), dan kedua, menggunakan satu fitur saja (Close) sebagai baseline untuk menguji efektivitasnya.
 - **Distribusi Harga Harian dan Perubahannya**: Untuk melihat sebaran harga dan volatilitas harian yang mungkin memengaruhi model prediksi.
    ![Screenshot 2025-04-29 155219](https://github.com/user-attachments/assets/62db5974-b3c5-4b33-8af3-f2a2f65e38b9)
 
-Distribusi perubahan harga harian (daily return) menunjukkan bentuk yang menyerupai distribusi normal, namun dengan kurtosis yang tinggi (heavy-tailed). Hal ini menunjukkan bahwa pergerakan harga emas dalam satu hari sebagian besar kecil, tetapi ada kemungkinan terjadinya lonjakan besar yang mencerminkan volatilitas pasar. Oleh karena itu, pemodelan perlu mempertimbangkan karakteristik volatilitas ini dan memilih model yang cukup robust terhadap outlier, seperti LSTM atau GRU.
+    Distribusi perubahan harga harian (daily return) menunjukkan bentuk yang menyerupai distribusi normal, namun dengan kurtosis yang tinggi (heavy-tailed). Hal ini menunjukkan bahwa pergerakan harga emas dalam satu hari sebagian besar kecil, tetapi ada kemungkinan terjadinya lonjakan besar yang mencerminkan volatilitas pasar. Oleh karena itu, pemodelan perlu mempertimbangkan karakteristik volatilitas ini dan memilih model yang cukup robust terhadap outlier, seperti LSTM atau GRU.
 
 - **Candlestick Chart**: Untuk menampilkan dinamika harga harian secara detail, termasuk Open, High, Low, dan Close.
   ![Screenshot 2025-04-29 155228](https://github.com/user-attachments/assets/635bf0aa-f58c-4e39-8f2e-76fc5a6a93d7)
   
-Terakhir, visualisasi candlestick chart membantu memperjelas dinamika harga intraday melalui representasi Open, High, Low, dan Close. Pola-pola candlestick tertentu seperti bullish atau bearish engulfing dapat memberikan sinyal teknikal yang bermanfaat dalam analisis harga. Namun, karena fitur OHLC memiliki korelasi yang sangat tinggi, penambahan seluruh fitur tersebut ke dalam model tidak selalu meningkatkan performa secara signifikan. Justru, model dengan satu fitur Close saja dapat memberikan hasil prediksi yang kompetitif dengan efisiensi lebih tinggi.
+    Terakhir, visualisasi candlestick chart membantu memperjelas dinamika harga intraday melalui representasi Open, High, Low, dan Close. Pola-pola candlestick tertentu seperti bullish atau bearish engulfing dapat memberikan sinyal teknikal yang bermanfaat dalam analisis harga. Namun, karena fitur OHLC memiliki korelasi yang sangat tinggi, penambahan seluruh fitur tersebut ke dalam model tidak selalu meningkatkan performa secara signifikan. Justru, model dengan satu fitur Close saja dapat memberikan hasil prediksi yang kompetitif dengan efisiensi lebih tinggi.
 
 Secara keseluruhan, hasil EDA ini menjadi dasar dalam pengambilan keputusan pemodelan, yaitu dengan membandingkan dua pendekatan: penggunaan beberapa fitur (OHLC) versus penggunaan satu fitur utama (Close). Perbandingan ini diharapkan dapat menjawab sejauh mana kompleksitas fitur memengaruhi performa model prediksi harga emas.
 
@@ -107,38 +123,42 @@ Visualisasi tersebut membantu dalam mengidentifikasi pola-pola penting yang bisa
 ## Data Preparation
 
 Proses persiapan data sangat penting dalam proyek time series forecasting karena kualitas input akan sangat mempengaruhi hasil prediksi. Berikut adalah tahapan data preparation yang dilakukan secara berurutan:
+1. **Penanganan Outlier pada data**
 
-1. **Konversi Kolom `Date` ke Format Datetime**
+    Pada tahap data preparation, ditemukan outlier pada kolom Volume, namun karena kolom ini tidak digunakan dalam proses modeling dan lonjakan volume merupakan kejadian alami di pasar, maka outlier pada Volume dibiarkan tanpa penghapusan atau interpolasi. Fokus penanganan outlier hanya dilakukan pada fitur yang digunakan untuk modeling.
+       Dilakukan Interpolasi linear pada beberapa fitur ['Close', 'Open', 'High', 'Low'] untuk menangani outlier, interpolasi linear baik untuk model time series terutama jika akan dilakukan dengan Modelling LSTM. 
+   
+2. **Konversi Kolom `Date` ke Format Datetime**
     
     Kolom `Date` dikonversi ke format datetime (`pd.to_datetime`) untuk memastikan data dapat diolah secara kronologis dan memungkinkan pemanfaatan fungsi-fungsi time series Pandas.
     
     *Alasan:* Format datetime diperlukan agar data dapat disortir dan digunakan dalam analisis berbasis waktu.
     
-2. **Pengurutan Data Secara Kronologis**
+3. **Pengurutan Data Secara Kronologis**
     
     Setelah konversi, data diurutkan berdasarkan tanggal secara menaik (ascending).
     
     *Alasan:* Data time series harus dalam urutan waktu yang benar agar windowing dan pembelajaran temporal model RNN/LSTM/GRU berjalan sesuai konteks waktu yang akurat.
     
-3. **Pemilihan Fitur yang Digunakan**
+4. **Pemilihan Fitur yang Digunakan (Feature selection)**
     
-    Fitur yang digunakan dalam modeling adalah: `Open`, `High`, `Low`, dan `Close`. Fitur `Volume` diabaikan karena nilainya banyak yang kosong dan tidak konsisten.
+    Fitur yang digunakan dalam modeling adalah: `Open`, `High`, `Low`, dan `Close`. Fitur `Volume` diabaikan karena nilainya banyak yang tidak konsisten. Hal ini berdasarkan hasil Explorasi pada dataset yang mana 4 fitur (OHLC) memiliki korelasi bernilai 1 mengindikasikan bahwa sebagian besar fitur harga membawa informasi yang serupa (redundan), sedangkan korelasi untuk fitur volume yang bernilai 0,6 dimana relatif rendah menjadi pertimbangan fitur ini tidak dipakai dalam modeling.
     
     *Alasan:* Fitur yang dipilih memiliki korelasi kuat terhadap harga penutupan dan relevan dalam analisis teknikal.
-    
-4. **Normalisasi Data (MinMaxScaler)**
+
+6. **Normalisasi Data (MinMaxScaler)**
     
     Semua fitur diskalakan ke rentang [0, 1] menggunakan `MinMaxScaler` dari scikit-learn.
     
     *Alasan:* Model deep learning sensitif terhadap skala data. Normalisasi mempercepat konvergensi dan mencegah dominasi fitur tertentu.
     
-5. **Pembuatan Dataset Time Series (Windowing)**
+7. **Pembuatan Dataset Time Series (Windowing)**
     
     Data disusun ulang menjadi window time series dengan panjang 60 hari (time_step = 60). Setiap 60 data sebelumnya digunakan untuk memprediksi 1 harga `Close` berikutnya.
     
     *Alasan:* Windowing memungkinkan model untuk belajar dari pola historis, misalnya tren 2 bulan terakhir untuk prediksi harga esok hari.
     
-6. **Split Data: Train, Validation, dan Test**
+8. **Split Data: Train, Validation, dan Test**
     
     Data dibagi menjadi:
     
@@ -147,7 +167,48 @@ Proses persiapan data sangat penting dalam proyek time series forecasting karena
     - 10% untuk pengujian akhir model.
         
         *Alasan:* Pembagian data ini membantu menghindari overfitting dan mengukur performa model secara obyektif pada data yang belum pernah dilihat sebelumnya.
-        
+      
+   Disini Pada percobaan pertama dilakukan dengan menggunakan 4 fitur sehingga pada percobaan LSTM dan GRU(1) akan melakukan data preparation berupa :
+   ```python
+   def create_dataset(scaled_data, time_step=60):
+    X, y = [], []
+    for i in range(len(data) - time_step - 1):
+        X.append(data[i:(i + time_step)])
+        y.append(data[i + time_step, 3])  # target: 'Close'
+    return np.array(X), np.array(y)
+   time_step = 60
+    X, y = create_dataset(scaled_data, time_step)
+    # Split data
+    total_samples = len(X)
+    train_end = int(0.7 * total_samples)
+    val_end = int(0.9 * total_samples)
+
+    X_train, y_train = X[:train_end], y[:train_end]
+    X_val, y_val = X[train_end:val_end], y[train_end:val_end]
+    X_test, y_test = X[val_end:], y[val_end:]X = X.reshape(X.shape[0], X.shape[1], 4)  # 4 fitur: Open, High, Low, Close
+   ```
+   
+   Dilakukan Windowing dan juga Split data dengan data frame yang sudah mencakup keempat fitur yaitu (Open, High,Low, Close). dan pada Model GRU(2) yang hanya menggunakan data Fitur 'Close' akan dilakukan pemrosesan windowing dan Split dataset sehingga sesuai dengan dataframe yang dipilih.
+   
+    ```python
+   close_data = scaled_data[:, 3]
+   def create_dataset(close_data, time_step=60):
+    X, y = [], []
+    for i in range(len(close_data) - time_step - 1):
+        X.append(close_data[i:(i + time_step)])
+        y.append(close_data[i + time_step])
+    return np.array(X), np.array(y)
+   time_step = 60
+    X, y = create_dataset(close_data, time_step)
+    X = X.reshape(X.shape[0], X.shape[1], 1)
+    total_samples = len(X)
+    train_end = int(0.7 * total_samples)
+    val_end = int(0.9 * total_samples)
+
+    X_train, y_train = X[:train_end], y[:train_end]
+    X_val, y_val = X[train_end:val_end], y[train_end:val_end]
+    X_test, y_test = X[val_end:], y[val_end:]
+     ```
 
 ## Modeling
 
@@ -159,18 +220,33 @@ Untuk menyelesaikan permasalahan prediksi harga emas harian, digunakan dua jenis
 
 **Arsitektur Model:**
 
-- Layer 1: LSTM dengan 64 unit, `return_sequences=True`, `activation='relu'`
-- Dropout: 0.2 (untuk mengurangi overfitting)
-- Layer 2: LSTM dengan 32 unit, `activation='relu'`
-- Dropout: 0.2
-- Output Layer: Dense(1)
-- Optimizer: Adam
-- Loss Function: Mean Squared Error (MSE)
-- Epochs: 50
-- Batch Size: 32
-- Fitur yang digunakan: `Open`, `High`, `Low`, `Close` (total 4 fitur)
-- Callbacks: EarlyStopping untuk menghentikan pelatihan jika validasi loss tidak membaik
 
+* LSTM(64, return_sequences=True, activation='relu'):
+Layer LSTM pertama dengan 64 unit.
+
+* return_sequences=True supaya outputnya masih berbentuk urutan (sequence), dibutuhkan untuk diteruskan ke LSTM berikutnya.
+
+* Aktivasi relu dipilih untuk mempercepat konvergensi dan menghindari vanishing gradient.
+
+* Dropout(0.2):
+Membantu mengurangi overfitting dengan menghapus (drop) 20% neuron secara acak saat training.
+
+* LSTM(32, activation='relu'):
+Layer LSTM kedua dengan 32 unit.
+
+* Di sini return_sequences=False (default), artinya outputnya satu vektor, bukan urutan lagi, untuk disambungkan ke Dense layer.
+
+* Dropout(0.2):
+Lagi-lagi untuk regularisasi.
+
+* Dense(1):
+Layer output dengan 1 neuron karena kita mau memprediksi satu nilai kontinu: harga Close.
+
+* compile(optimizer='adam', loss='mse'):
+
+* Optimizer Adam dipakai karena cepat dan efisien.
+
+* Loss function MSE (Mean Squared Error) cocok untuk masalah regresi harga.
 ```python
 model = Sequential([
     LSTM(64, return_sequences=True, activation='relu', input_shape=(time_step, 4)),
@@ -202,6 +278,17 @@ history = model.fit(
 - Performa prediksi pada data aktual masih memiliki gap kecil terhadap nilai sebenarnya (sedikit underfit atau overfit tergantung kondisi).
 
 ---
+### Eksperimen Tambahan: GRU dengan 4 Fitur
+
+- Layer 1: GRU dengan 50 unit, `return_sequences=True`
+- Layer 2: GRU dengan 50 unit
+- Dense Layer: Layer output dengan 1 neuron karena kita mau memprediksi satu nilai kontinu: harga Close.
+- Optimizer: Adam
+- Loss Function: MSE
+- Epochs: 50
+- Fitur yang digunakan: `Open`, `High`, `Low`, `Close` (4 fitur)
+
+Eksperimen ini menunjukkan bahwa penggunaan 4 fitur pada GRU meningkatkan informasi yang tersedia untuk model, namun waktu pelatihan menjadi sedikit lebih lama dibanding GRU 1 fitur. Hasil prediksi tetap akurat dan mendekati hasil dari model LSTM.
 
 ### Model 2: GRU (Gated Recurrent Unit)
 
@@ -209,12 +296,12 @@ history = model.fit(
 
 - Layer 1: GRU dengan 50 unit, `return_sequences=True`
 - Layer 2: GRU dengan 50 unit
-- Output Layer: Dense(1)
+- Output Layer: Dense(1) Dense layer untuk prediksi satu nilai Close price.
 - Optimizer: Adam
 - Loss Function: MSE
 - Epochs: 50
 - Batch Size: 32
-- Fitur yang digunakan: hanya `Close` (1 fitur)
+- Fitur yang digunakan: hanya `Close` (1 fitur) 
 - Callbacks: EarlyStopping
 
 ```python
@@ -245,17 +332,6 @@ history = model.fit(
 - Kurang informatif jika ingin menjelaskan penyebab naik turunnya harga berdasarkan fitur lain.
 
 ---
-
-### Eksperimen Tambahan: GRU dengan 4 Fitur
-
-- Layer GRU: 2 lapisan
-- Dense Layer: 1 output neuron
-- Optimizer: Adam
-- Loss Function: MSE
-- Epochs: 50
-- Fitur yang digunakan: `Open`, `High`, `Low`, `Close` (4 fitur)
-
-Eksperimen ini menunjukkan bahwa penggunaan 4 fitur pada GRU meningkatkan informasi yang tersedia untuk model, namun waktu pelatihan menjadi sedikit lebih lama dibanding GRU 1 fitur. Hasil prediksi tetap akurat dan mendekati hasil dari model LSTM.
 
 
 ### Model Terbaik: **GRU dengan 1 Fitur (Close)**
@@ -315,25 +391,25 @@ Berikut adalah hasil evaluasi untuk masing-masing model:
 
 ### 1. **Model GRU dengan 1 Fitur (`Close`)**
 
-- **MAE**: 16.74 USD
-- **RMSE**: 22.23 USD
-- **R² Score**: 0.9942
+- **MAE**: 16.52 USD
+- **RMSE**: 22.01 USD
+- **R² Score**: 0.9943
 
 Model ini memberikan hasil terbaik dengan MAE dan RMSE paling rendah serta R² tertinggi. Ini menunjukkan bahwa prediksi mendekati nilai aktual dan model sangat mampu menjelaskan variasi harga emas.
 
 ### 2. **Model GRU dengan 4 Fitur (`Open`, `High`, `Low`, `Close`)**
 
-- **MAE**: 22.56 USD
-- **RMSE**: 29.85 USD
-- **R² Score**: 0.9896
+- **MAE**: 21.24 USD
+- **RMSE**: 28.43 USD
+- **R² Score**: 0.9905
 
 Model ini memberikan hasil yang juga baik, namun sedikit di bawah performa model GRU 1 fitur. Model ini bisa menjadi alternatif apabila dibutuhkan pemodelan yang mempertimbangkan lebih banyak fitur.
 
 ### 3. **Model LSTM dengan 4 Fitur**
 
-- **MAE**: 41.18 USD
-- **RMSE**: 55.47 USD
-- **R² Score**: 0.9640
+- **MAE**: 29.75 USD
+- **RMSE**: 39.14 USD
+- **R² Score**: 0.9821
 
 Meskipun LSTM adalah arsitektur populer untuk data time series, model ini memiliki performa paling rendah dalam eksperimen ini. Hal ini menunjukkan bahwa dalam kasus ini, GRU lebih cocok karena lebih ringan dan konvergen lebih cepat.
 
