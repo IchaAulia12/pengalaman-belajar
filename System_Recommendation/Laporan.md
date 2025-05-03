@@ -1,4 +1,4 @@
-# Laporan Proyek Machine Learning - Nama Anda
+# Laporan Proyek Machine Learning - Icha Aulia Putri Ambarwati
 
 # System Recommendation
 
@@ -67,13 +67,14 @@ Membaca merupakan kegiatan penting yang mendukung pembelajaran dan pengembangan 
 
 Untuk mencapai tujuan yang telah ditetapkan, berikut ini adalah pendekatan solusi yang dapat digunakan dalam pengembangan sistem rekomendasi buku:
 
-1. **Content-Based Filtering**
-    
-    Pendekatan ini merekomendasikan buku berdasarkan kemiripan atribut konten (genre, penulis, kata kunci deskripsi) dari buku-buku yang pernah disukai atau dibaca oleh pengguna. Misalnya, jika seorang pengguna menyukai buku fiksi ilmiah dengan tema futuristik, sistem akan merekomendasikan buku lain dengan karakteristik yang serupa.
-    
-2. **Collaborative Filtering**
+
+1. **Collaborative Filtering**
     
     Pendekatan ini memberikan rekomendasi berdasarkan preferensi pengguna lain yang memiliki kebiasaan membaca serupa. Jika pengguna A dan B memiliki kesamaan dalam membaca beberapa buku, maka sistem akan menyarankan buku yang dibaca B namun belum dibaca A, dan sebaliknya.
+   
+2. **Content-Based Filtering**
+    
+    Pendekatan ini merekomendasikan buku berdasarkan kemiripan atribut konten (Judul, Penulis, Penerbit) dari buku-buku yang pernah disukai atau dibaca oleh pengguna. Misalnya, jika seorang pengguna menyukai buku fiksi ilmiah dengan tema futuristik, sistem akan merekomendasikan buku lain dengan karakteristik yang serupa.
     
 3. **Hybrid Approach**
     
@@ -176,10 +177,6 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
   - **Insight** : Kelompok usia 21–30 tahun adalah yang paling dominan, disusul oleh 31–40 tahun dan 41–50 tahun. Kelompok usia anak-anak (0–10 tahun) dan lansia (71+) jumlahnya sangat kecil.
   - **Implikasi** : Rekomendasi buku yang bersifat dewasa atau young-adult lebih relevan untuk ditonjolkan dibanding buku anak-anak atau lansia.
 ![image](https://github.com/user-attachments/assets/c2a59a8c-f394-4526-8375-4b9f585bc4f3)
-- Heatmap
-  - **Insight** : 
-![image](https://github.com/user-attachments/assets/b9be3d5d-cf74-4a73-9e56-cb46a15f1fc5)
-
 
 ## Data Preparation
 - **Mengubah Tipe Data pada kolom Year-Of-Publisher**
@@ -351,15 +348,13 @@ Top-5 Recommended Books for User 11676:
 
 - **Collaborative Filtering** bekerja baik saat data interaksi melimpah.
 - **Content-Based Filtering** berguna saat data interaksi minim, atau untuk menangani item baru.
-- **Hybrid** menjadi solusi terbaik untuk rekomendasi yang akurat dan fleksibel.
-
-
-## Evaluation
-## 📊 Evaluasi Model
-
-Evaluasi dilakukan untuk menilai seberapa baik model merekomendasikan buku yang sesuai dengan preferensi pengguna. Metrik evaluasi dipilih berdasarkan jenis model yang digunakan dan karakteristik data.
+- **Hybrid** menjadi solusi **TERBAIK** untuk rekomendasi yang akurat dan fleksibel.
 
 ---
+
+## Evaluation
+
+Evaluasi dilakukan untuk menilai seberapa baik model merekomendasikan buku yang sesuai dengan preferensi pengguna. Metrik evaluasi dipilih berdasarkan jenis model yang digunakan dan karakteristik data.
 
 ### Collaborative Filtering (SVD)
 
@@ -388,9 +383,9 @@ Cosine similarity mengukur kesamaan antara dua vektor berdasarkan sudut di antar
 Metrik ini sangat cocok digunakan untuk data berbasis teks seperti deskripsi buku karena tidak dipengaruhi oleh panjang dokumen.
 
 **Hasil (Contoh):**  
-Rekomendasi untuk buku *"See Jane Run"* memiliki skor similarity tertinggi sebesar **0.8891**, yang berarti sistem berhasil menemukan buku dengan konten yang sangat mirip.
+Rekomendasi untuk buku *"Fantastic Voyage"* memiliki skor similarity tertinggi sebesar **0.9889**, yang berarti sistem berhasil menemukan buku dengan konten yang sangat mirip.
+![image](https://github.com/user-attachments/assets/e3846dd3-5953-4b0f-b68d-a7921e86d97a)
 
----
 
 ### Hybrid Recommendation  
 **Metrik yang digunakan: Hybrid Score**
@@ -404,3 +399,5 @@ Dengan mengombinasikan keduanya, hybrid score memberikan skor akhir yang lebih s
 
 **Hasil (Contoh):**  
 Buku *Harry Potter and the Goblet of Fire* memperoleh skor hybrid sebesar **6.83**, hasil dari kombinasi similarity **0.7884** dan predicted rating **9.43**.
+![image](https://github.com/user-attachments/assets/b0001be2-41ef-4ef3-aece-f48fb7d263dd)
+
