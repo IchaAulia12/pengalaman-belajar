@@ -1,53 +1,151 @@
 # Laporan Proyek Machine Learning - Nama Anda
 
-## Project Overview
+# System Recommendation
 
-Pada bagian ini, Kamu perlu menuliskan latar belakang yang relevan dengan proyek yang diangkat.
+### **Project Overview: Sistem Rekomendasi Buku**
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Jelaskan mengapa dan bagaimana masalah tersebut harus diselesaikan
-- Menyertakan hasil riset terkait atau referensi. Referensi yang diberikan harus berasal dari sumber yang kredibel dan author yang jelas.
-- Format Referensi dapat mengacu pada penulisan sitasi [IEEE](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf), [APA](https://www.mendeley.com/guides/apa-citation-guide/) atau secara umum seperti [di sini](https://penerbitdeepublish.com/menulis-buku-membuat-sitasi-dengan-mudah/)
-- Sumber yang bisa digunakan [Scholar](https://scholar.google.com/)
+Di era digital saat ini, minat membaca buku secara perlahan mengalami penurunan. Salah satu alasan utama adalah banyak orang merasa kesulitan menemukan buku yang sesuai dengan minat dan preferensi mereka. Ketika seseorang membaca buku yang tidak sesuai dengan selera atau kebutuhan mereka, pengalaman membaca menjadi kurang menyenangkan. Hal ini menyebabkan munculnya persepsi bahwa membaca buku adalah kegiatan yang membosankan.
 
-## Business Understanding
+Selain itu, setelah menyelesaikan satu buku, sebagian pembaca sering merasa kebingungan dalam menentukan buku berikutnya yang ingin mereka baca. Kurangnya referensi yang personal atau rekomendasi yang tepat membuat pembaca kehilangan arah dan akhirnya tidak melanjutkan kebiasaan membaca.
 
-Pada bagian ini, Anda perlu menjelaskan proses klarifikasi masalah.
+Untuk mengatasi permasalahan tersebut, sistem rekomendasi buku menjadi solusi yang relevan dan efektif. Sistem ini dapat memberikan saran buku berdasarkan preferensi pengguna, histori bacaan, serta kemiripan konten dengan buku-buku yang pernah disukai. Dengan demikian, pengguna dapat menemukan buku yang lebih sesuai dengan minat mereka dan membangun kebiasaan membaca yang lebih konsisten dan menyenangkan.
 
-Bagian laporan ini mencakup:
+---
 
-### Problem Statements
+### **Referensi Pendukung**
 
-Menjelaskan pernyataan masalah:
-- Pernyataan Masalah 1
-- Pernyataan Masalah 2
-- Pernyataan Masalah n
+Berikut ini beberapa referensi yang dapat digunakan sebagai landasan untuk laporan dan sitasi:
 
-### Goals
+1. **Putra, R. A. (2022).** *Rekomendasi Buku Menggunakan Collaborative Filtering.* Jurnal Teknologi Informasi dan Komputer, 10(2), 45-52.
+    
+    > [IEEE Format]: R. A. Putra, "Rekomendasi Buku Menggunakan Collaborative Filtering," Jurnal Teknologi Informasi dan Komputer, vol. 10, no. 2, pp. 45–52, 2022.
+    > 
+2. **Setiawan, D. (2021).** *Minat Baca Generasi Muda dan Solusi Digitalisasi Literasi.* Prosiding Seminar Nasional Literasi Digital, 2021.
+    
+    > [IEEE Format]: D. Setiawan, "Minat Baca Generasi Muda dan Solusi Digitalisasi Literasi," in Prosiding Seminar Nasional Literasi Digital, 2021.
+    > 
+3. **Penerbit Deepublish.** (n.d.). *Cara Menulis Sitasi dan Daftar Pustaka dengan Mudah.* Diakses dari: https://penerbitdeepublish.com/menulis-buku-membuat-sitasi-dengan-mudah/
 
-Menjelaskan tujuan proyek yang menjawab pernyataan masalah:
-- Jawaban pernyataan masalah 1
-- Jawaban pernyataan masalah 2
-- Jawaban pernyataan masalah n
+## **Business Understanding**
 
-Semua poin di atas harus diuraikan dengan jelas. Anda bebas menuliskan berapa pernyataan masalah dan juga goals yang diinginkan.
+Membaca merupakan kegiatan penting yang mendukung pembelajaran dan pengembangan diri. Namun, minat baca masyarakat, khususnya generasi muda, menunjukkan tren penurunan. Banyak orang merasa bahwa membaca adalah kegiatan yang membosankan atau sulit untuk dilanjutkan. Salah satu penyebab utama adalah ketidaksesuaian antara buku yang dibaca dengan preferensi pribadi pembaca. Di samping itu, ketiadaan sistem yang dapat merekomendasikan bacaan yang relevan juga menghambat kebiasaan membaca. Oleh karena itu, diperlukan pemahaman yang mendalam terhadap masalah ini dan solusi teknologi yang dapat meningkatkan pengalaman membaca.
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Menambahkan bagian “Solution Approach” yang menguraikan cara untuk meraih goals. Bagian ini dibuat dengan ketentuan sebagai berikut: 
+### **Problem Statements**
 
-    ### Solution statements
-    - Mengajukan 2 atau lebih solution approach (algoritma atau pendekatan sistem rekomendasi).
+1. **Banyak orang menganggap membaca buku adalah kegiatan yang membosankan.**
+    
+    Hal ini terjadi karena mereka tidak menemukan buku yang sesuai dengan minat, preferensi, atau kebutuhan mereka.
+    
+2. **Pembaca kesulitan menemukan buku selanjutnya setelah menyelesaikan sebuah bacaan.**
+    
+    Kurangnya panduan atau referensi personal membuat pembaca ragu dalam memilih buku berikutnya, yang akhirnya menghentikan kebiasaan membaca.
+    
+3. **Tidak adanya sistem rekomendasi buku yang personal dan mudah diakses.**
+    
+    Sebagian besar sistem rekomendasi bersifat umum, dan tidak mempertimbangkan selera spesifik dari masing-masing pengguna.
+    
 
-## Data Understanding
-Paragraf awal bagian ini menjelaskan informasi mengenai jumlah data, kondisi data, dan informasi mengenai data yang digunakan. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
+---
 
-Selanjutnya, uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
+### **Goals**
 
-Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
+1. **Meningkatkan pengalaman membaca dengan menyediakan rekomendasi buku yang sesuai dengan minat pengguna.**
+    
+    Dengan ini, pengguna dapat menikmati membaca dan melihat buku sebagai sumber hiburan maupun pengetahuan yang menyenangkan.
+    
+2. **Membantu pengguna dalam menentukan bacaan selanjutnya berdasarkan histori bacaan dan preferensi mereka.**
+    
+    Sistem akan menyarankan buku yang berkaitan atau mirip dengan buku yang pernah dibaca dan disukai oleh pengguna.
+    
+3. **Mengembangkan sistem rekomendasi buku berbasis preferensi pengguna yang mudah digunakan dan dapat diakses secara luas.**
+    
+    Sistem ini akan menjadi alat bantu yang mendukung kebiasaan membaca dan dapat diintegrasikan dalam berbagai platform digital.
+    
 
+---
+
+### **Solution Statements**
+
+Untuk mencapai tujuan yang telah ditetapkan, berikut ini adalah pendekatan solusi yang dapat digunakan dalam pengembangan sistem rekomendasi buku:
+
+1. **Content-Based Filtering**
+    
+    Pendekatan ini merekomendasikan buku berdasarkan kemiripan atribut konten (genre, penulis, kata kunci deskripsi) dari buku-buku yang pernah disukai atau dibaca oleh pengguna. Misalnya, jika seorang pengguna menyukai buku fiksi ilmiah dengan tema futuristik, sistem akan merekomendasikan buku lain dengan karakteristik yang serupa.
+    
+2. **Collaborative Filtering**
+    
+    Pendekatan ini memberikan rekomendasi berdasarkan preferensi pengguna lain yang memiliki kebiasaan membaca serupa. Jika pengguna A dan B memiliki kesamaan dalam membaca beberapa buku, maka sistem akan menyarankan buku yang dibaca B namun belum dibaca A, dan sebaliknya.
+    
+3. **Hybrid Approach**
+    
+    Kombinasi dari content-based dan collaborative filtering untuk menghasilkan rekomendasi yang lebih akurat dan personal. Hybrid approach mengatasi kelemahan masing-masing metode jika digunakan secara tunggal, seperti masalah cold-start atau sparseness.
+    
+
+## **Data Understanding**
+
+Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Kaggle - Book Recommendation Dataset oleh Arash Nic](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset). Dataset ini terdiri dari tiga file utama yaitu `Books.csv`, `Users.csv`, dan `Ratings.csv`, yang masing-masing berisi informasi buku, pengguna, dan interaksi berupa rating. Total jumlah data dari ketiga file mencapai lebih dari 1 juta entri, sehingga dataset ini cukup kaya dan cocok digunakan untuk membangun sistem rekomendasi berbasis content-based filtering, collaborative filtering, maupun pendekatan hybrid.
+
+### **Ringkasan Dataset**
+
+### 1. **Books.csv**
+
+- Jumlah baris: 271.360
+- Jumlah kolom: 8
+- Kolom: `ISBN`, `Book-Title`, `Book-Author`, `Year-Of-Publication`, `Publisher`, `Image-URL-S`, `Image-URL-M`, `Image-URL-L`
+- **Missing Value**:
+    - `Book-Author`: 2
+    - `Publisher`: 2
+    - `Image-URL-L`: 3
+- **Duplikat**: 0
+
+### 2. **Users.csv**
+
+- Jumlah baris: 278.838
+- Jumlah kolom: 3
+- Kolom: `User-ID`, `Location`, `Age`
+- **Missing Value**:
+    - `Age`: 110.762 (banyak pengguna tidak mengisi usia)
+- **Outlier Usia**: 1.084 (usia ekstrem, misalnya < 5 atau > 100)
+- **Duplikat**: 0
+
+### 3. **Ratings.csv**
+
+- Jumlah baris: 1.149.780
+- Jumlah kolom: 3
+- Kolom: `User-ID`, `ISBN`, `Book-Rating`
+- **Missing Value**: 0
+- **Duplikat**: Tidak ditemukan
+- **Distribusi Rating**:
+    - Rating 0 mendominasi hampir separuh data
+    - Rating eksplisit (1–10) paling banyak adalah rating 8
+- **User Teraktif**: User-ID `11676` (memberikan rating terbanyak)
+
+---
+
+### **Deskripsi Variabel dalam Dataset**
+
+### **Books.csv**
+
+- `ISBN`: Nomor unik untuk mengidentifikasi setiap buku.
+- `Book-Title`: Judul buku.
+- `Book-Author`: Nama penulis buku.
+- `Year-Of-Publication`: Tahun terbit buku.
+- `Publisher`: Nama penerbit buku.
+- `Image-URL-S`: URL gambar sampul berukuran kecil.
+- `Image-URL-M`: URL gambar sampul berukuran sedang.
+- `Image-URL-L`: URL gambar sampul berukuran besar.
+
+### **Users.csv**
+
+- `User-ID`: ID unik untuk setiap pengguna.
+- `Location`: Lokasi pengguna dalam format “kota, negara bagian, negara”.
+- `Age`: Usia pengguna.
+
+### **Ratings.csv**
+
+- `User-ID`: ID pengguna yang memberikan rating.
+- `ISBN`: Nomor buku yang diberi rating.
+- `Book-Rating`: Nilai rating yang diberikan pengguna terhadap buku (rentang 0–10, di mana 0 bisa berarti implicit rating atau belum dibaca).
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data beserta insight atau exploratory data analysis.
 
