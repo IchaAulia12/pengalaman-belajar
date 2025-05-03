@@ -24,7 +24,6 @@ Berikut ini beberapa referensi yang dapat digunakan sebagai landasan untuk lapor
     
     > [IEEE Format]: D. Setiawan, "Minat Baca Generasi Muda dan Solusi Digitalisasi Literasi," in Prosiding Seminar Nasional Literasi Digital, 2021.
     > 
-3. **Penerbit Deepublish.** (n.d.). *Cara Menulis Sitasi dan Daftar Pustaka dengan Mudah.* Diakses dari: https://penerbitdeepublish.com/menulis-buku-membuat-sitasi-dengan-mudah/
 
 ## **Business Understanding**
 
@@ -146,6 +145,15 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
 - `User-ID`: ID pengguna yang memberikan rating.
 - `ISBN`: Nomor buku yang diberi rating.
 - `Book-Rating`: Nilai rating yang diberikan pengguna terhadap buku (rentang 0–10, di mana 0 bisa berarti implicit rating atau belum dibaca).
+
+### **Exploratory Data Analysis (EDA) & Visualisasi
+
+![image](https://github.com/user-attachments/assets/e2901b77-03c2-4dd5-afcf-5cc428d6bb39)
+![image](https://github.com/user-attachments/assets/382bf172-305b-4cef-b363-9bf7032f88d5)
+![image](https://github.com/user-attachments/assets/25ac21d9-02d7-4af0-8d3e-e532811a090e)
+![image](https://github.com/user-attachments/assets/c2a59a8c-f394-4526-8375-4b9f585bc4f3)
+![image](https://github.com/user-attachments/assets/b9be3d5d-cf74-4a73-9e56-cb46a15f1fc5)
+
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data beserta insight atau exploratory data analysis.
 
