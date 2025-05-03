@@ -250,22 +250,157 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
   Tujuan: Membuat representasi konten buku dalam satu kolom, yang akan digunakan sebagai input ke model TF-IDF untuk mencari kemiripan antar buku.
   
 ## Modeling
-Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan permasalahan. Sajikan top-N recommendation sebagai output.
+Untuk menyelesaikan permasalahan pencarian buku yang relevan bagi pengguna, saya mengembangkan **dua model sistem rekomendasi berbeda** dan juga satu **pendekatan hybrid**. Masing-masing pendekatan memiliki kelebihan dan keterbatasan, yang dijelaskan di bawah.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menyajikan dua solusi rekomendasi dengan algoritma yang berbeda.
-- Menjelaskan kelebihan dan kekurangan dari solusi/pendekatan yang dipilih.
+---
+
+### 1. Collaborative Filtering (Model: SVD - Singular Value Decomposition)
+
+**Langkah-langkah:**
+- Data diubah menjadi format `Surprise` untuk pemodelan.
+- Model **SVD** dilatih dengan data rating pengguna.
+- Evaluasi menggunakan RMSE menunjukkan kinerja prediktif model.
+- Sistem menghasilkan *Top-5 Recommendation* untuk pengguna teraktif berdasarkan prediksi rating tertinggi terhadap buku yang belum pernah dibaca.
+
+**Contoh Output:**
+Top-5 Recommended Books for User 11676:
+
+1. American Gods by Neil Gaiman - Predicted Rating: 10.00
+
+2. Jesus Freaks by DC Talk - Predicted Rating: 10.00
+
+3. The Fellowship of the Ring by J.R.R. Tolkien - Predicted Rating: 9.84
+
+4. Angels & Demons by Dan Brown - Predicted Rating: 9.76
+
+5. Rising Tides by Nora Roberts - Predicted Rating: 9.73
+
+
+**Kelebihan:**
+- Bisa menemukan hubungan *latent* antar pengguna dan buku.
+- Tidak perlu metadata buku (judul, penulis, dll).
+- Cocok untuk menangkap pola preferensi kompleks.
+
+**Kekurangan:**
+- Butuh banyak data interaksi (rating).
+- Tidak bisa memberi rekomendasi untuk user atau item baru (cold start problem).
+- Rentan terhadap data sparse.
+
+---
+
+### 2. Content-Based Filtering (Model: TF-IDF + Nearest Neighbors)
+
+**Langkah-langkah:**
+- Data konten buku (judul, penulis, penerbit) diproses menggunakan **TF-IDF**.
+- Model pencarian menggunakan **cosine similarity** dengan algoritma Nearest Neighbors.
+- Fungsi rekomendasi mencari buku yang paling mirip dengan buku input.
+
+**Contoh Output untuk: "See Jane Run":**
+
+| Judul              | Penulis      | Penerbit       | Skor Similaritas |
+|--------------------|--------------|----------------|------------------|
+| See Jane Run       | Joy Fielding | Harpercollins  | 0.8891           |
+| Don't Cry Now      | Joy Fielding | Avon           | 0.6956           |
+| Tell Me No Secrets | Joy Fielding | Avon           | 0.6064           |
+| The First Time     | Joy Fielding | Atria          | 0.5430           |
+| The Other Woman    | Joy Fielding | Signet Book    | 0.5389           |
+
+**Kelebihan:**
+- Tidak membutuhkan interaksi pengguna.
+- Cocok untuk kasus **cold start item** (buku baru).
+- Bisa menjelaskan alasan rekomendasi ("mirip dengan buku X").
+
+**Kekurangan:**
+- Terbatas pada konten yang tersedia (tidak bisa menangkap selera pengguna).
+- Tidak memanfaatkan hubungan antar pengguna.
+- Rekomendasi bisa terlalu "serupa" dan tidak variatif.
+
+---
+
+### 3. Hybrid Recommendation System (Content + Collaborative)
+
+**Langkah-langkah:**
+- Menggabungkan skor similarity dari model content-based dengan prediksi rating dari model SVD.
+- Nilai akhir dihitung dengan rumus:  
+  `hybrid_score = α * similarity + (1 - α) * predicted_rating`
+- Hasil disortir berdasarkan skor hybrid untuk mendapatkan Top-N.
+
+**Contoh Output untuk: "Harry Potter and the Goblet of Fire" (user_id = 11676):**
+
+| Judul                                              | Similarity | Predicted Rating | Hybrid Score |
+|----------------------------------------------------|------------|------------------|--------------|
+| Harry Potter and the Goblet of Fire                | 0.7884     | 9.43             | 6.83         |
+| Harry Potter and the Sorcerer's Stone              | 0.4836     | 9.21             | 6.59         |
+| Harry Potter and the Prisoner of Azkaban           | 0.4983     | 8.69             | 6.23         |
+| Fantastic Beasts and Where to Find Them            | 0.4987     | 7.63             | 5.49         |
+| Harry Potter and the Chamber of Secrets            | 0.4919     | 7.62             | 5.48         |
+
+**Kelebihan:**
+- Mengatasi kekurangan masing-masing pendekatan.
+- Lebih personal karena mempertimbangkan profil user dan konten buku.
+- Fleksibel: bisa disesuaikan dengan mengubah nilai `alpha`.
+
+**Kekurangan:**
+- Lebih kompleks secara implementasi.
+- Perlu kedua sumber data: konten buku dan interaksi user.
+- Parameter `alpha` sensitif, harus di-*tune*.
+
+---
+
+## Kesimpulan
+
+- **Collaborative Filtering** bekerja baik saat data interaksi melimpah.
+- **Content-Based Filtering** berguna saat data interaksi minim, atau untuk menangani item baru.
+- **Hybrid** menjadi solusi terbaik untuk rekomendasi yang akurat dan fleksibel.
+
 
 ## Evaluation
-Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
+## 📊 Evaluasi Model
 
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
+Evaluasi dilakukan untuk menilai seberapa baik model merekomendasikan buku yang sesuai dengan preferensi pengguna. Metrik evaluasi dipilih berdasarkan jenis model yang digunakan dan karakteristik data.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
+---
 
-**---Ini adalah bagian akhir laporan---**
+### Collaborative Filtering (SVD)
 
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
+**Metrik yang digunakan: RMSE (Root Mean Squared Error)**
+
+**Formula:**
+
+![image](https://github.com/user-attachments/assets/2c0fb420-1179-48b4-a39b-15ecb251f02b)
+
+**Penjelasan:**
+RMSE mengukur seberapa jauh prediksi model dari rating aktual yang diberikan pengguna. Semakin kecil nilai RMSE, semakin baik performa model karena prediksi lebih mendekati nilai aktual.
+
+**Hasil:**
+RMSE:1.6228
+Interpretasi:
+Nilai RMSE sebesar 1.6 menunjukkan bahwa rata-rata kesalahan prediksi model berada di bawah 1 poin dalam skala rating 1–10. Hal ini mengindikasikan bahwa model SVD cukup baik dalam memahami preferensi pengguna.
+
+### Content-Based Filtering  
+**Metrik yang digunakan: Cosine Similarity**
+
+**Formula:**
+![Screenshot 2025-05-03 190215](https://github.com/user-attachments/assets/0bae4f56-3d9f-4ec9-8d95-64232b8e4585)
+
+**Penjelasan:**  
+Cosine similarity mengukur kesamaan antara dua vektor berdasarkan sudut di antara mereka. Nilainya berkisar dari 0 (tidak mirip sama sekali) hingga 1 (sangat mirip).  
+Metrik ini sangat cocok digunakan untuk data berbasis teks seperti deskripsi buku karena tidak dipengaruhi oleh panjang dokumen.
+
+**Hasil (Contoh):**  
+Rekomendasi untuk buku *"See Jane Run"* memiliki skor similarity tertinggi sebesar **0.8891**, yang berarti sistem berhasil menemukan buku dengan konten yang sangat mirip.
+
+---
+
+### Hybrid Recommendation  
+**Metrik yang digunakan: Hybrid Score**
+
+**Formula:**
+![Screenshot 2025-05-03 190231](https://github.com/user-attachments/assets/40829db6-f255-4b9e-b29c-00eef1746f2e)
+
+**Penjelasan:**  
+Metrik ini menggabungkan kekuatan prediksi rating dari collaborative filtering (SVD) dengan kesamaan konten dari content-based filtering.  
+Dengan mengombinasikan keduanya, hybrid score memberikan skor akhir yang lebih seimbang — memperhitungkan baik preferensi pengguna maupun kemiripan antar buku.
+
+**Hasil (Contoh):**  
+Buku *Harry Potter and the Goblet of Fire* memperoleh skor hybrid sebesar **6.83**, hasil dari kombinasi similarity **0.7884** dan predicted rating **9.43**.
