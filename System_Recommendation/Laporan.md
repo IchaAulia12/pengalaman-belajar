@@ -182,45 +182,45 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
 
 
 ## Data Preparation
-- **Mengubah type data kolom Year-Of-Publisher**
+- **Mengubah Tipe Data pada kolom Year-Of-Publisher**
 
-  Penjelasan: Mengubah kolom tahun publikasi menjadi tipe numerik. Jika ada nilai tidak valid (misalnya teks), akan diubah jadi NaN.
+  Penjelasan: Kolom Year-Of-Publication diubah menjadi tipe numerik. Jika terdapat data tidak valid (seperti string atau simbol), akan dikonversi menjadi NaN.
 
-  Tujuan: Supaya bisa dianalisis atau difilter sebagai angka, bukan string.
+  Tujuan: Supaya bisa dianalisis atau difilter sebagai angka, bukan string.Supaya tahun bisa dianalisis dan difilter secara numerik.
 - **Menghapus Outlier pada Year-Of-Publication**
   Penjelasan: Menghapus data buku dengan tahun publikasi yang tidak wajar (di luar 1980–2024).
 
   Tujuan: Menghindari data outlier yang bisa mengganggu analisis atau rekomendasi (misalnya tahun 0 atau 9999).
-- **Menghapus missing value pada 'Book-Author', 'Publisher', 'Image-URL-L'**
+- **Menghapus Nilai Kosong pada Kolom Penting**
   
-  Penjelasan: Menghapus baris yang memiliki nilai kosong di kolom penting seperti penulis, penerbit, dan gambar.
+  Penjelasan: Baris yang memiliki NaN di kolom Book-Author, Publisher, atau Image-URL-L dihapus..
 
   Tujuan: Kolom ini penting untuk filtering konten dan tampilan aplikasi, jadi harus lengkap.
-- **Menghapus Outlier pada Age**
+- **Menghapus Outlier pada Kolom Umur**
   Penjelasan: Menghapus data pengguna dengan umur yang tidak wajar berdasarkan batas bawah dan atas yang telah ditentukan.
 
   Tujuan: Umur ekstrem atau tidak masuk akal bisa bias terhadap analisis demografi pengguna.
-- **Menggabungkan tabel dalam satu tabel utuh**
+- **Menggabungkan Tabel Rating, User, dan Buku**
   Penjelasan: Menggabungkan tabel rating dengan user dan buku untuk mendapatkan data lengkap dalam satu tabel.
 
   Tujuan: Collaborative Filtering membutuhkan informasi pengguna, buku, dan rating dalam satu struktur data.
-- **Menghapus Rating yang bernilai 0**
-  Penjelasan: Menggabungkan tabel rating dengan user dan buku untuk mendapatkan data lengkap dalam satu tabel.
-
+- **Menghapus Rating dengan Nilai Nol**
+  Penjelasan: Hanya rating eksplisit (1–10) yang dipertahankan. Rating 0 dihapus karena tidak mewakili interaksi nyata.
+  
   Tujuan: Collaborative Filtering membutuhkan informasi pengguna, buku, dan rating dalam satu struktur data.
 - **Menyaring data user dan buku**
   Penjelasan: Menyaring hanya user dan buku yang muncul lebih dari satu kali.
 
   Tujuan: Untuk meningkatkan kualitas data, karena interaksi tunggal sulit digunakan dalam Collaborative Filtering.
-- **Membersihkan nilai pada data Age**
+- **Membersihkan dan Menangani Kolom Umur**
   Penjelasan: Membersihkan nilai usia ekstrem dan mengganti nilai kosong dengan -1 sebagai penanda "tidak diketahui".
 
   Tujuan: Menghindari error saat analisis, dan tetap bisa mengenali pengguna yang tidak mengisi umur.
-- **Fitur Selection untuk Model Collaborative Learning**
+- **Feature Selection untuk Collaborative Filtering**
   Penjelasan: Mengambil hanya kolom penting untuk modeling dan mengganti nama kolom agar lebih ringkas.
 
   Tujuan: Supaya data lebih siap dipakai dalam model Collaborative Filtering dan lebih mudah digunakan dalam coding.
-- **Fitur selection & data cleaning**
+- **Feature Selection & Data Cleaning untuk Content-Based Filtering**
   Penjelasan:
 
   Membuat salinan books dan ratings untuk menjaga data asli tetap utuh.
