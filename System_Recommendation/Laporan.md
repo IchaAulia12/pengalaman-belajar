@@ -100,7 +100,8 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
     - Number of low outliers: 9078
     - Number of high outliers: 17
     - Total number of outliers: 9095
-  ![image](https://github.com/user-attachments/assets/98ff9c05-6ae7-4fb1-8891-1b0ceec77963)
+
+   ![image](https://github.com/user-attachments/assets/98ff9c05-6ae7-4fb1-8891-1b0ceec77963)
 
 - **Duplikat**: 0
 
@@ -112,6 +113,7 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
 - **Missing Value**:
     - `Age`: 110.762 (banyak pengguna tidak mengisi usia)
 - **Outlier Usia**: 1.084 (usia ekstrem, misalnya < 5 atau > 100)
+
   ![image](https://github.com/user-attachments/assets/422ef4a5-2ef6-4aa7-a18e-f1a066dd5137)
 - **Duplikat**: 0
 
@@ -157,6 +159,7 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
 ### **Exploratory Data Analysis (EDA) & Visualisasi**
 - Distribusi Rating Buku
   - **Insight** : Mayoritas rating bernilai 0 (lebih dari 700.000), yang kemungkinan besar menunjukkan rating tidak diberikan atau kosong. Rating yang benar-benar diberikan lebih banyak di angka 8, diikuti 7, 10, dan 9. Artinya, ketika pengguna memberi rating, mereka cenderung memberikan penilaian yang positif.
+
 ![image](https://github.com/user-attachments/assets/e2901b77-03c2-4dd5-afcf-5cc428d6bb39)
 - Top 5 Buku yang memiliki Rating terbanyak :
     - Wild Animus   :     2502.0
@@ -168,14 +171,17 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
 - Top 10 Negara dengan Jumlah User Terbanyak
   - **Insight** : USA mendominasi jumlah pengguna dengan selisih yang sangat jauh dibanding negara lainnya. Negara seperti Kanada, UK, dan Jerman juga memiliki cukup banyak pengguna, namun jauh di bawah USA.
   - **Implikasi** : Implikasi: Data sangat didominasi oleh pengguna dari USA, sehingga preferensi buku dan perilaku rating bisa sangat bias terhadap budaya atau tren di USA.
+
 ![image](https://github.com/user-attachments/assets/382bf172-305b-4cef-b363-9bf7032f88d5)
 - Distribusi Usia Pengguna
   - **Insight** : Mayoritas pengguna berada di rentang usia 20–40 tahun, dengan puncak sekitar usia 25 tahun. Terlihat distribusi miring ke kanan (right-skewed), artinya ada lebih banyak pengguna muda dibanding pengguna yang lebih tua.
   - **Implikasi** : Sistem rekomendasi mungkin lebih relevan untuk kelompok usia muda karena mereka adalah mayoritas pengguna.
+
 ![image](https://github.com/user-attachments/assets/25ac21d9-02d7-4af0-8d3e-e532811a090e)
 - Distribusi Pengguna Berdasarkan Kelompok Usia
   - **Insight** : Kelompok usia 21–30 tahun adalah yang paling dominan, disusul oleh 31–40 tahun dan 41–50 tahun. Kelompok usia anak-anak (0–10 tahun) dan lansia (71+) jumlahnya sangat kecil.
   - **Implikasi** : Rekomendasi buku yang bersifat dewasa atau young-adult lebih relevan untuk ditonjolkan dibanding buku anak-anak atau lansia.
+
 ![image](https://github.com/user-attachments/assets/c2a59a8c-f394-4526-8375-4b9f585bc4f3)
 
 ## Data Preparation
