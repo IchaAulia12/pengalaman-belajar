@@ -78,7 +78,7 @@ Untuk mencapai tujuan yang telah ditetapkan, berikut ini adalah pendekatan solus
     
 ## **Data Understanding**
 
-Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Kaggle - Book Recommendation Dataset oleh Arash Nic](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset). Dataset ini terdiri dari tiga file utama yaitu `Books.csv`, `Users.csv`, dan `Ratings.csv`, yang masing-masing berisi informasi buku, pengguna, dan interaksi berupa rating. Total jumlah data dari ketiga file mencapai lebih dari 1 juta entri, sehingga dataset ini cukup kaya dan cocok digunakan untuk membangun sistem rekomendasi berbasis content-based filtering, collaborative filtering, maupun pendekatan hybrid.
+Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Kaggle - Book Recommendation Dataset oleh Arash Nic](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset). Dataset ini terdiri dari tiga file utama yaitu `Books.csv`, `Users.csv`, dan `Ratings.csv`, yang masing-masing berisi informasi buku, pengguna, dan interaksi berupa rating. Total jumlah data dari ketiga file mencapai lebih dari 1 juta entri, sehingga dataset ini cukup kaya dan cocok digunakan untuk membangun sistem rekomendasi berbasis content-based filtering dan collaborative filtering.
 
 ### **Ringkasan Dataset**
 
@@ -263,7 +263,7 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
     - Penjelasan: Menambahkan kolom clean_title dengan judul yang sudah dibersihkan (huruf kecil dan tanpa simbol khusus) agar pencarian judul lebih konsisten dan efisien. Kolom ini dijadikan indeks pencarian cepat dengan title_to_index.
   
 ## Modeling
-Untuk menyelesaikan permasalahan pencarian buku yang relevan bagi pengguna, saya mengembangkan **dua model sistem rekomendasi berbeda** dan juga satu **pendekatan hybrid**. Masing-masing pendekatan memiliki kelebihan dan keterbatasan, yang dijelaskan di bawah.
+Untuk menyelesaikan permasalahan pencarian buku yang relevan bagi pengguna, saya mengembangkan **dua model sistem rekomendasi berbeda**. Masing-masing pendekatan memiliki kelebihan dan keterbatasan, yang dijelaskan di bawah.
 
 ---
 
@@ -358,6 +358,36 @@ Menampilkan hasil rekomendasi dalam format yang informatif.
 ## Evaluation
 
 Evaluasi dilakukan untuk menilai seberapa baik model merekomendasikan buku yang sesuai dengan preferensi pengguna. Metrik evaluasi dipilih berdasarkan jenis model yang digunakan dan karakteristik data.
+
+---
+
+## Metrik Evaluasi
+Dalam proyek sistem rekomendasi, evaluasi model dilakukan menggunakan dua metrik utama yang umum digunakan dalam Information Retrieval, yaitu:
+
+### 1. Precision@K
+
+**Precision@K** mengukur proporsi item relevan di antara K item teratas yang direkomendasikan oleh sistem.
+
+![image](https://github.com/user-attachments/assets/5793e8fb-1811-4743-889f-7022b72b61fd)
+
+​
+Precision@K memberikan informasi seberapa akurat rekomendasi model. Nilai precision yang tinggi menunjukkan bahwa sebagian besar item yang direkomendasikan adalah relevan bagi pengguna. Metrik ini cocok digunakan ketika kita ingin memaksimalkan kualitas rekomendasi dalam jumlah terbatas.
+
+### 2. Recall@K
+
+**Recall@K** mengukur proporsi item relevan yang berhasil direkomendasikan oleh sistem dari keseluruhan item relevan yang tersedia untuk pengguna.
+
+![image](https://github.com/user-attachments/assets/9d531217-e05b-4eaa-93ea-c2b2e31e7ca3)
+
+Recall@K menunjukkan seberapa baik sistem dalam menangkap seluruh item yang seharusnya direkomendasikan. Nilai yang lebih tinggi menunjukkan sistem mampu mengidentifikasi lebih banyak item yang benar-benar disukai oleh pengguna.
+
+#### Catatan:
+
+- Nilai Precision@K dan Recall@K berada pada rentang 0 hingga 1.
+
+- Precision@K fokus pada kualitas dari top-K rekomendasi, sedangkan Recall@K fokus pada cakupan (coverage) dari seluruh item relevan.
+
+- Keduanya saling melengkapi dan sering digunakan bersamaan untuk mengevaluasi kinerja sistem rekomendasi.
 
 ---
 
