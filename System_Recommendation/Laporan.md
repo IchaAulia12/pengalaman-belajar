@@ -76,11 +76,6 @@ Untuk mencapai tujuan yang telah ditetapkan, berikut ini adalah pendekatan solus
     
     Pendekatan ini merekomendasikan buku berdasarkan kemiripan atribut konten (Judul, Penulis, Penerbit) dari buku-buku yang pernah disukai atau dibaca oleh pengguna. Misalnya, jika seorang pengguna menyukai buku fiksi ilmiah dengan tema futuristik, sistem akan merekomendasikan buku lain dengan karakteristik yang serupa.
     
-3. **Hybrid Approach**
-    
-    Kombinasi dari content-based dan collaborative filtering untuk menghasilkan rekomendasi yang lebih akurat dan personal. Hybrid approach mengatasi kelemahan masing-masing metode jika digunakan secara tunggal, seperti masalah cold-start atau sparseness.
-    
-
 ## **Data Understanding**
 
 Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Kaggle - Book Recommendation Dataset oleh Arash Nic](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset). Dataset ini terdiri dari tiga file utama yaitu `Books.csv`, `Users.csv`, dan `Ratings.csv`, yang masing-masing berisi informasi buku, pengguna, dan interaksi berupa rating. Total jumlah data dari ketiga file mencapai lebih dari 1 juta entri, sehingga dataset ini cukup kaya dan cocok digunakan untuk membangun sistem rekomendasi berbasis content-based filtering, collaborative filtering, maupun pendekatan hybrid.
@@ -221,132 +216,135 @@ Dataset yang digunakan dalam proyek sistem rekomendasi buku ini diambil dari [Ka
   Tujuan: Menghindari error saat analisis, dan tetap bisa mengenali pengguna yang tidak mengisi umur.
 - **Feature Selection untuk Collaborative Filtering**
   Penjelasan: Mengambil hanya kolom penting untuk modeling dan mengganti nama kolom agar lebih ringkas.
+- **Data Preparation untuk Collaborative Filtering**
+  - Format data sesuai Surprise
+    - Penjelasan: Library Surprise membutuhkan data dalam format khusus. Kode Reader(rating_scale=(1, 10)) digunakan untuk menentukan skala rating yang digunakan dalam dataset (antara 1 hingga 10). Kemudian Dataset.load_from_df(...) mengubah DataFrame menjadi format yang bisa diproses oleh Surprise.
 
+  - Train-Test Split
+    - Penjelasan: Membagi data menjadi set pelatihan dan pengujian menggunakan train_test_split untuk evaluasi model. Parameter test_size=0.2 berarti 20% data digunakan untuk pengujian, sedangkan random_state=42 menjamin reprodusibilitas.
   Tujuan: Supaya data lebih siap dipakai dalam model Collaborative Filtering dan lebih mudah digunakan dalam coding.
-- **Feature Selection & Data Cleaning untuk Content-Based Filtering**
-  Penjelasan:
+- **Data Preparation untuk Content-Based Filtering**
+  - Duplikasi Data
 
-  Membuat salinan books dan ratings untuk menjaga data asli tetap utuh.
+    - Penjelasan: Menyalin DataFrame df_book dan df_Ratings ke variabel lokal books dan ratings untuk menghindari modifikasi data asli.
 
-  Rename kolom books agar mudah dibaca.
+  - Rename dan Seleksi Kolom Buku
 
-  Hapus baris buku yang tidak memiliki informasi penting seperti judul, penulis, atau penerbit.
+    - Penjelasan: Mengubah nama kolom pada dataset buku agar lebih deskriptif dan memilih hanya kolom yang relevan: ISBN, judul, penulis, penerbit, dan link gambar besar (img_l).
 
-  Tujuan: Menjamin data yang digunakan lengkap dan relevan untuk membuat profil konten buku (title, author, publisher).
-- **Filtering pada data**
-  Penjelasan:
+  - Menghapus Data Kosong
 
-  Rename kolom ratings.
+    - Penjelasan: Membersihkan data dengan menghapus entri buku yang memiliki informasi penting (judul, penulis, penerbit, gambar) yang kosong. Ini penting agar sistem rekomendasi tidak menghasilkan output yang tidak lengkap.
 
-  Ambil hanya data rating eksplisit (bukan nol).
+  - Gabungkan Fitur Buku
 
-  Pilih hanya buku yang memiliki setidaknya satu rating eksplisit.
+    - Penjelasan: Membuat fitur gabungan (combined_features) dari judul, penulis, dan penerbit untuk mewakili konten buku sebagai satu string. Ini akan digunakan untuk ekstraksi fitur TF-IDF.
 
-  Tujuan: Memastikan model hanya menggunakan buku yang benar-benar pernah dinilai oleh pengguna, sehingga bisa diasumsikan memiliki kualitas tertentu.
-- **Normalisasi pada data**
-  Penjelasan:
+  - Threshold Relevansi
 
-  Fungsi clean_text() untuk normalisasi teks (huruf kecil dan hapus spasi tak perlu).
+    - Penjelasan: Menentukan ambang batas nilai rating (RELEVANT_THRESHOLD = 7) untuk menilai apakah suatu buku dianggap relevan dalam evaluasi precision dan recall.
 
-  Menggabungkan title, author, dan publisher menjadi satu string fitur.
+  - Filter dan Persiapan Rating
 
-  Tujuan: Membuat representasi konten buku dalam satu kolom, yang akan digunakan sebagai input ke model TF-IDF untuk mencari kemiripan antar buku.
+    - Penjelasan:
+
+      - Menghapus entri rating yang mengandung nilai kosong.
+
+      - Menyaring rating berdasarkan ISBN buku yang masih tersedia.
+
+      - Menambahkan kolom user_id sebagai identifikasi pengguna. Ini mempersiapkan data untuk evaluasi dan sistem rekomendasi.
+
+  - Ekstraksi Fitur TF-IDF
+
+    - Penjelasan: Mengubah teks combined_features menjadi vektor numerik menggunakan TF-IDF Vectorizer. Konfigurasi stop_words='english', max_features=5000, dan lainnya dibuat untuk mengoptimalkan akurasi dan efisiensi memori.
+
+  - Cleaning dan Index Judul
+
+    - Penjelasan: Menambahkan kolom clean_title dengan judul yang sudah dibersihkan (huruf kecil dan tanpa simbol khusus) agar pencarian judul lebih konsisten dan efisien. Kolom ini dijadikan indeks pencarian cepat dengan title_to_index.
   
 ## Modeling
 Untuk menyelesaikan permasalahan pencarian buku yang relevan bagi pengguna, saya mengembangkan **dua model sistem rekomendasi berbeda** dan juga satu **pendekatan hybrid**. Masing-masing pendekatan memiliki kelebihan dan keterbatasan, yang dijelaskan di bawah.
 
 ---
 
-### 1. Collaborative Filtering (Model: SVD - Singular Value Decomposition)
+## Model 1: Collaborative Filtering menggunakan SVD (Singular Value Decomposition)
+### Arsitektur Model:
+- model_svd = SVD()
+    Menggunakan algoritma SVD dari library Surprise untuk mempelajari pola preferensi pengguna berdasarkan data rating historis.
 
-**Langkah-langkah:**
-- Data diubah menjadi format `Surprise` untuk pemodelan.
-- Model **SVD** dilatih dengan data rating pengguna.
-- Evaluasi menggunakan RMSE menunjukkan kinerja prediktif model.
-- Sistem menghasilkan *Top-5 Recommendation* untuk pengguna teraktif berdasarkan prediksi rating tertinggi terhadap buku yang belum pernah dibaca.
+- model_svd.fit(trainset)
+    Melatih model pada data pelatihan (trainset) untuk mempelajari hubungan antara pengguna dan buku berdasarkan rating.
 
-**Contoh Output:**
-Top-5 Recommended Books for User 11676:
+- model_svd.test(testset)
+    Menguji performa model pada data uji untuk mengevaluasi akurasi prediksi.
 
-1. American Gods by Neil Gaiman - Predicted Rating: 10.00
+- accuracy.rmse(predictions)
+    Mengukur Root Mean Square Error (RMSE) sebagai metrik evaluasi. Semakin rendah RMSE, semakin baik performa prediksi model.
 
-2. Jesus Freaks by DC Talk - Predicted Rating: 10.00
+- Rekomendasi untuk User Tertentu:
 
-3. The Fellowship of the Ring by J.R.R. Tolkien - Predicted Rating: 9.84
+    - User teraktif diambil berdasarkan frekuensi rating terbanyak (user_id = df_model['user_id'].value_counts().index[0])
 
-4. Angels & Demons by Dan Brown - Predicted Rating: 9.76
+    - Buku yang belum pernah dibaca oleh user tersebut difilter (books_to_predict)
 
-5. Rising Tides by Nora Roberts - Predicted Rating: 9.73
+    - Prediksi rating dilakukan pada buku-buku tersebut (model_svd.predict)
 
+    - Buku dengan estimasi rating tertinggi diurutkan dan diambil 5 teratas untuk direkomendasikan.
 
-**Kelebihan:**
-- Bisa menemukan hubungan *latent* antar pengguna dan buku.
-- Tidak perlu metadata buku (judul, penulis, dll).
-- Cocok untuk menangkap pola preferensi kompleks.
+### Kelebihan:
+- Tidak membutuhkan informasi tentang konten buku (hanya rating).
 
-**Kekurangan:**
-- Butuh banyak data interaksi (rating).
-- Tidak bisa memberi rekomendasi untuk user atau item baru (cold start problem).
-- Rentan terhadap data sparse.
+- Mampu menangkap pola laten antara user dan item secara efisien.
 
----
+### Kekurangan:
+- Tidak bisa merekomendasikan item ke user baru atau item baru (cold start problem).
 
-### 2. Content-Based Filtering (Model: TF-IDF + Nearest Neighbors)
-
-**Langkah-langkah:**
-- Data konten buku (judul, penulis, penerbit) diproses menggunakan **TF-IDF**.
-- Model pencarian menggunakan **cosine similarity** dengan algoritma Nearest Neighbors.
-- Fungsi rekomendasi mencari buku yang paling mirip dengan buku input.
-
-**Contoh Output untuk: "See Jane Run":**
-
-| Judul              | Penulis      | Penerbit       | Skor Similaritas |
-|--------------------|--------------|----------------|------------------|
-| See Jane Run       | Joy Fielding | Harpercollins  | 0.8891           |
-| Don't Cry Now      | Joy Fielding | Avon           | 0.6956           |
-| Tell Me No Secrets | Joy Fielding | Avon           | 0.6064           |
-| The First Time     | Joy Fielding | Atria          | 0.5430           |
-| The Other Woman    | Joy Fielding | Signet Book    | 0.5389           |
-
-**Kelebihan:**
-- Tidak membutuhkan interaksi pengguna.
-- Cocok untuk kasus **cold start item** (buku baru).
-- Bisa menjelaskan alasan rekomendasi ("mirip dengan buku X").
-
-**Kekurangan:**
-- Terbatas pada konten yang tersedia (tidak bisa menangkap selera pengguna).
-- Tidak memanfaatkan hubungan antar pengguna.
-- Rekomendasi bisa terlalu "serupa" dan tidak variatif.
+- Butuh data rating yang cukup banyak dan merata agar hasilnya akurat.
 
 ---
 
-### 3. Hybrid Recommendation System (Content + Collaborative)
+## 2. Model 2: Content-Based Filtering menggunakan TF-IDF + Nearest Neighbors
+### Arsitektur Model:
+- TfidfVectorizer(...)
+    Mengubah teks gabungan dari judul, penulis, dan penerbit (combined_features) menjadi representasi numerik berdasarkan frekuensi kata (TF-IDF).
+Konfigurasi:
 
-**Langkah-langkah:**
-- Menggabungkan skor similarity dari model content-based dengan prediksi rating dari model SVD.
-- Nilai akhir dihitung dengan rumus:  
-  `hybrid_score = α * similarity + (1 - α) * predicted_rating`
-- Hasil disortir berdasarkan skor hybrid untuk mendapatkan Top-N.
+    - stop_words='english': Menghapus kata umum yang tidak informatif.
 
-**Contoh Output untuk: "Harry Potter and the Goblet of Fire" (user_id = 11676):**
+    - max_features=5000: Membatasi jumlah kata agar hemat memori.
 
-| Judul                                              | Similarity | Predicted Rating | Hybrid Score |
-|----------------------------------------------------|------------|------------------|--------------|
-| Harry Potter and the Goblet of Fire                | 0.7884     | 9.43             | 6.83         |
-| Harry Potter and the Sorcerer's Stone              | 0.4836     | 9.21             | 6.59         |
-| Harry Potter and the Prisoner of Azkaban           | 0.4983     | 8.69             | 6.23         |
-| Fantastic Beasts and Where to Find Them            | 0.4987     | 7.63             | 5.49         |
-| Harry Potter and the Chamber of Secrets            | 0.4919     | 7.62             | 5.48         |
+    - strip_accents='unicode', lowercase=True: Membersihkan teks untuk konsistensi.
 
-**Kelebihan:**
-- Mengatasi kekurangan masing-masing pendekatan.
-- Lebih personal karena mempertimbangkan profil user dan konten buku.
-- Fleksibel: bisa disesuaikan dengan mengubah nilai `alpha`.
+- NearestNeighbors(metric='cosine', algorithm='brute')
+    Model pembanding yang mengukur kemiripan antar buku berdasarkan vektor TF-IDF menggunakan cosine similarity.
 
-**Kekurangan:**
-- Lebih kompleks secara implementasi.
-- Perlu kedua sumber data: konten buku dan interaksi user.
-- Parameter `alpha` sensitif, harus di-*tune*.
+- nn_model.fit(tfidf_matrix)
+    Melatih model Nearest Neighbors dengan representasi vektor semua buku.
+
+- Fungsi get_recommendations()
+
+    - Menerima input judul buku.
+
+    - Mencari indeks buku di books.
+
+    - Mengambil vektor TF-IDF buku tersebut.
+
+    - Menghitung kemiripan dengan semua buku lain.
+
+    - Mengembalikan daftar buku paling mirip (selain buku input itu sendiri).
+
+- recommended_books[['title', 'author', 'publisher', 'img_l']]
+Menampilkan hasil rekomendasi dalam format yang informatif.
+
+### Kelebihan:
+- Tidak tergantung pada data rating, bisa bekerja walau data rating sedikit.
+
+- Bisa direkomendasikan ke user baru (selama mereka memilih buku favorit).
+
+### Kekurangan:
+- Rekomendasi terbatas pada item yang memiliki konten mirip (kurang variasi).
+
+- Sulit menangkap preferensi pengguna secara kompleks (tidak ada data interaksi user).
 
 ---
 
@@ -354,56 +352,53 @@ Top-5 Recommended Books for User 11676:
 
 - **Collaborative Filtering** bekerja baik saat data interaksi melimpah.
 - **Content-Based Filtering** berguna saat data interaksi minim, atau untuk menangani item baru.
-- **Hybrid** menjadi solusi **TERBAIK** untuk rekomendasi yang akurat dan fleksibel.
-
+  
 ---
 
 ## Evaluation
 
 Evaluasi dilakukan untuk menilai seberapa baik model merekomendasikan buku yang sesuai dengan preferensi pengguna. Metrik evaluasi dipilih berdasarkan jenis model yang digunakan dan karakteristik data.
 
-### Collaborative Filtering (SVD)
+---
 
-**Metrik yang digunakan: RMSE (Root Mean Squared Error)**
+## Hasil Evaluasi Model
 
-**Formula:**
+Berikut adalah hasil evaluasi dua pendekatan sistem rekomendasi yang dibangun, menggunakan metrik Precision@5 dan Recall@5, yang merepresentasikan seberapa relevan rekomendasi terhadap preferensi pengguna.
 
-![image](https://github.com/user-attachments/assets/2c0fb420-1179-48b4-a39b-15ecb251f02b)
+### 1. Model Collaborative Filtering (SVD)
+- Precision@5: 0.3860
 
-**Penjelasan:**
-RMSE mengukur seberapa jauh prediksi model dari rating aktual yang diberikan pengguna. Semakin kecil nilai RMSE, semakin baik performa model karena prediksi lebih mendekati nilai aktual.
+- Recall@5: 0.9366
 
-**Hasil:**
-RMSE:1.6228
-Interpretasi:
-Nilai RMSE sebesar 1.6 menunjukkan bahwa rata-rata kesalahan prediksi model berada di bawah 1 poin dalam skala rating 1–10. Hal ini mengindikasikan bahwa model SVD cukup baik dalam memahami preferensi pengguna.
+    Model ini menunjukkan performa terbaik dengan nilai precision dan recall yang tinggi. Precision@5 sebesar 0.3860 berarti sekitar 38,6% dari buku yang direkomendasikan termasuk dalam buku relevan (rating tinggi). Sementara Recall@5 sebesar 0.9366 menunjukkan bahwa hampir semua buku relevan berhasil direkomendasikan kepada pengguna. Hal ini mencerminkan bahwa pendekatan collaborative filtering berhasil menangkap pola preferensi pengguna dengan baik.
 
-### Content-Based Filtering  
-**Metrik yang digunakan: Cosine Similarity**
+### 2. Model Content-Based Filtering (TF-IDF + Nearest Neighbors)
+- Precision@5: 0.0020
 
-**Formula:**
-![Screenshot 2025-05-03 190215](https://github.com/user-attachments/assets/0bae4f56-3d9f-4ec9-8d95-64232b8e4585)
+- Recall@5: 0.0019
 
-**Penjelasan:**  
-Cosine similarity mengukur kesamaan antara dua vektor berdasarkan sudut di antara mereka. Nilainya berkisar dari 0 (tidak mirip sama sekali) hingga 1 (sangat mirip).  
-Metrik ini sangat cocok digunakan untuk data berbasis teks seperti deskripsi buku karena tidak dipengaruhi oleh panjang dokumen.
+    Model content-based menunjukkan performa yang sangat rendah pada metrik evaluasi. Hanya sekitar 0,2% dari rekomendasi yang benar-benar relevan, dan hanya sekitar 0,19% dari semua buku relevan berhasil direkomendasikan. Hal ini disebabkan oleh keterbatasan fitur konten buku dalam dataset, yang hanya terdiri dari atribut seperti judul, penulis, penerbit, dan tahun publikasi, tanpa deskripsi atau genre yang lebih mendalam.
 
-**Hasil (Contoh):**  
-Rekomendasi untuk buku *"Fantastic Voyage"* memiliki skor similarity tertinggi sebesar **0.9889**, yang berarti sistem berhasil menemukan buku dengan konten yang sangat mirip.
-![image](https://github.com/user-attachments/assets/e3846dd3-5953-4b0f-b68d-a7921e86d97a)
+### Kesimpulan :
+#### Model collaborative filtering (SVD) secara efektif menjawab ketiga masalah utama:
 
+- Membuat membaca jadi lebih menarik: Dengan merekomendasikan buku yang relevan secara personal, pengguna lebih mungkin tertarik untuk membaca.
 
-### Hybrid Recommendation  
-**Metrik yang digunakan: Hybrid Score**
+- Membantu menemukan bacaan selanjutnya: Sistem menyarankan buku berdasarkan pola pengguna lain yang serupa, mengurangi kebingungan dalam memilih buku berikutnya.
 
-**Formula:**
-![Screenshot 2025-05-03 190231](https://github.com/user-attachments/assets/40829db6-f255-4b9e-b29c-00eef1746f2e)
+- Menyediakan sistem rekomendasi yang personal: Model berbasis SVD mampu menyesuaikan rekomendasi berdasarkan interaksi pengguna.
 
-**Penjelasan:**  
-Metrik ini menggabungkan kekuatan prediksi rating dari collaborative filtering (SVD) dengan kesamaan konten dari content-based filtering.  
-Dengan mengombinasikan keduanya, hybrid score memberikan skor akhir yang lebih seimbang — memperhitungkan baik preferensi pengguna maupun kemiripan antar buku.
+#### Sebaliknya, model content-based belum berhasil menjawab masalah tersebut secara optimal karena keterbatasan fitur dalam dataset.
+Sebagian besar goals berhasil dicapai melalui model collaborative filtering:
 
-**Hasil (Contoh):**  
-Buku *Harry Potter and the Goblet of Fire* memperoleh skor hybrid sebesar **6.83**, hasil dari kombinasi similarity **0.7884** dan predicted rating **9.43**.
-![image](https://github.com/user-attachments/assets/b0001be2-41ef-4ef3-aece-f48fb7d263dd)
+- Pengalaman membaca meningkat melalui rekomendasi yang sesuai minat.
 
+- Rekomendasi bacaan selanjutnya dihasilkan berdasarkan histori pengguna.
+
+- Sistem bersifat personal dan bisa dikembangkan ke platform digital.
+
+Namun, goal dari pendekatan content-based masih belum tercapai karena kurangnya fitur konten deskriptif pada buku.
+
+---
+
+Solusi menggunakan Collaborative Filtering terbukti berdampak signifikan, sesuai dengan performa evaluasi dan kemampuannya menjawab permasalahan utama. Solusi Content-Based Filtering memberikan insight bahwa untuk meningkatkan efektivitasnya, dibutuhkan dataset yang lebih kaya, seperti sinopsis buku, genre, atau tag yang lebih spesifik.
