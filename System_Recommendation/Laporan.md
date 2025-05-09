@@ -291,6 +291,10 @@ Untuk menyelesaikan permasalahan pencarian buku yang relevan bagi pengguna, saya
 
     - Buku dengan estimasi rating tertinggi diurutkan dan diambil 5 teratas untuk direkomendasikan.
 
+### Hasil Top 5 :
+    
+![image](https://github.com/user-attachments/assets/1182bb77-e05e-4776-b03a-066fff3f35c9)
+
 ### Kelebihan:
 - Tidak membutuhkan informasi tentang konten buku (hanya rating).
 
@@ -335,6 +339,9 @@ Konfigurasi:
 
 - recommended_books[['title', 'author', 'publisher', 'img_l']]
 Menampilkan hasil rekomendasi dalam format yang informatif.
+
+### Hasil Top 10 :
+![image](https://github.com/user-attachments/assets/55192171-885b-49df-b5c1-9f5ce0cc5787)
 
 ### Kelebihan:
 - Tidak tergantung pada data rating, bisa bekerja walau data rating sedikit.
